@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".WelcomeActivity">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to MessengerApp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_30"/>
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_40"/>
+    <Button
+        android:id="@+id/button_welcome_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/space_18"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginEnd="@dimen/space_20" />
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/space_40"/>
+    <Button
+        android:id="@+id/button_welcome_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_700"
+        android:text="@string/register_welcome_btn"
+        android:textColor="@color/white"
+        android:textSize="@dimen/space_18"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_marginEnd="@dimen/space_20"/>
+
+</LinearLayout>

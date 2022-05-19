@@ -1,10 +1,11 @@
-package com.example.messengerapp
+package com.example.messengerapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.messengerapp.R
 
 class SettingsFragment : Fragment() {
 

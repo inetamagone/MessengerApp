@@ -6,4 +6,6 @@
     <dimen name="text_20">20sp</dimen>
     <dimen name="text_30">30sp</dimen>
     <dimen name="space_180">180dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_18">18sp</dimen>
 </resources>
