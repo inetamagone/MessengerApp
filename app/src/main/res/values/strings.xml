@@ -24,4 +24,5 @@
     <string name="password_register">password</string>
     <string name="login">Login</string>
     <string name="register_welcome_btn">Register</string>
+    <string name="log_out">Log out</string>
 </resources>
