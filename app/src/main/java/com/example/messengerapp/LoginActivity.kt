@@ -9,6 +9,7 @@ import com.example.messengerapp.databinding.ActivityLoginBinding
 import com.example.messengerapp.databinding.ActivityRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -32,7 +33,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
         auth = FirebaseAuth.getInstance()
         binding.buttonLogin.setOnClickListener {
             loginUser()

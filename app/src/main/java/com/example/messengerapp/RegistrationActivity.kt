@@ -77,9 +77,9 @@ class RegistrationActivity : AppCompatActivity() {
                             userHashMap["uid"] = firebaseUserId!!
                             userHashMap["username"] = username
                             userHashMap["profile"] =
-                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-3d4af.appspot.com/o/image_placeholder.png?alt=media&token=c0e9df53-5f2d-4046-b2fa-e502bbffbab3"
+                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/image_placeholder.png?alt=media&token=a801f1f3-261b-4e4d-ad19-d48049290c21"
                             userHashMap["cover"] =
-                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-3d4af.appspot.com/o/cover_placeholder.jpg?alt=media&token=8d5d13d6-3a6b-4d8f-a4ef-c15154a691e3"
+                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/cover_placeholder.jpg?alt=media&token=90e49e38-12d5-4dcf-873a-a1f635c70f91"
                             userHashMap["status"] = "offline"
                             userHashMap["search"] = username.toLowerCase()
                             userHashMap["facebook"] = "https://m.facebook.com"
@@ -91,6 +91,7 @@ class RegistrationActivity : AppCompatActivity() {
                                     if (task.isSuccessful) {
                                         Log.d("RegistrationActivity", "User created!")
                                     } else {
+                                        Log.d("RegistrationActivity", "User is NOT created!")
                                         Toast
                                             .makeText(
                                                 this@RegistrationActivity,
