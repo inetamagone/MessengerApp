@@ -8,4 +8,6 @@
     <dimen name="space_180">180dp</dimen>
     <dimen name="space_10">10dp</dimen>
     <dimen name="space_18">18sp</dimen>
+    <dimen name="text_18">18sp</dimen>
+    <dimen name="space_30">30dp</dimen>
 </resources>

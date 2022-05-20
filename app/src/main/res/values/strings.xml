@@ -25,4 +25,5 @@
     <string name="login">Login</string>
     <string name="register_welcome_btn">Register</string>
     <string name="log_out">Log out</string>
+    <string name="username_search">Username</string>
 </resources>
