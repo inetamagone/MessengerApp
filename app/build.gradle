@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     implementation 'com.google.firebase:firebase-database-ktx:20.0.5'
     implementation 'com.google.firebase:firebase-messaging:23.0.4'
+    implementation platform('com.google.firebase:firebase-bom:30.0.1')
 
     // Design
     implementation 'com.squareup.picasso:picasso:2.71828'
