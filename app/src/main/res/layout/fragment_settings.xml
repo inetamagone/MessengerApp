@@ -39,6 +39,23 @@
                 android:layout_marginBottom="@dimen/space_10"
                 android:textSize="@dimen/text_18"
                 android:textColor="@color/black"/>
+            <ImageView
+                android:id="@+id/edit_cover_image"
+                android:layout_width="@dimen/space_18"
+                android:layout_height="@dimen/space_18"
+                android:src="@drawable/edit"
+                android:layout_below="@+id/cover_image_settings"
+                android:layout_marginTop="-30dp"
+                android:layout_marginStart="@dimen/space_10" />
+            <ImageView
+                android:id="@+id/edit_profile_image"
+                android:layout_width="@dimen/space_18"
+                android:layout_height="@dimen/space_18"
+                android:src="@drawable/edit"
+                android:layout_below="@+id/profile_image_settings"
+                android:layout_marginTop="-30dp"
+                android:layout_marginStart="@dimen/space_10"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
