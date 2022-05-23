@@ -8,8 +8,7 @@ class UserData {
     private var status: String = ""
     private var search: String = ""
     private var facebook: String = ""
-    private var instagram: String = ""
-    private var website: String = ""
+    private var about: String = ""
 
     constructor()
     constructor(
@@ -20,8 +19,7 @@ class UserData {
         status: String,
         search: String,
         facebook: String,
-        instagram: String,
-        website: String
+        about: String,
     ) {
         this.uid = uid
         this.username = username
@@ -30,8 +28,7 @@ class UserData {
         this.status = status
         this.search = search
         this.facebook = facebook
-        this.instagram = instagram
-        this.website = website
+        this.about = about
     }
     // uid
     fun getUid(): String {
@@ -82,18 +79,11 @@ class UserData {
     fun setFacebook(facebook: String) {
         this.facebook = facebook
     }
-    // instagram
-    fun getInstagram(): String {
-        return instagram
+    // about
+    fun getAbout(): String {
+        return about
     }
-    fun setInstagram(instagram: String) {
-        this.instagram = instagram
-    }
-    // website
-    fun getWebsite(): String {
-        return website
-    }
-    fun setWebsite(website: String) {
-        this.website = website
+    fun setAbout(about: String) {
+        this.about = about
     }
 }

@@ -1,7 +1,9 @@
 package com.example.messengerapp.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,6 +12,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import com.example.messengerapp.databinding.FragmentSettingsBinding
 import com.example.messengerapp.model.UserData
 import com.google.android.gms.tasks.Continuation
@@ -34,6 +38,7 @@ class SettingsFragment : Fragment() {
     private lateinit var imageUri: Uri
     private lateinit var storageRef: StorageReference
     private var isProfileImage: Boolean = false
+    private var isEditingAbout: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,12 +47,13 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
-        userReference = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser.uid)
+        userReference =
+            FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser.uid)
 
         userReference.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()) {
+                if (snapshot.exists()) {
                     val user: UserData? = snapshot.getValue(UserData::class.java)
                     binding.usernameSettings.text = user!!.getUsername()
                     Picasso
@@ -58,6 +64,7 @@ class SettingsFragment : Fragment() {
                         .get()
                         .load(user.getCover())
                         .into(binding.coverImageSettings)
+                    binding.aboutSettings.text = user.getAbout()
                 }
             }
 
@@ -81,6 +88,97 @@ class SettingsFragment : Fragment() {
         binding.editProfileImage.setOnClickListener {
             isProfileImage = true
             selectImage()
+        }
+        binding.facebookSettings.setOnClickListener {
+            isEditingAbout = false
+            editPersonalInfo()
+        }
+        binding.editAboutInfo.setOnClickListener {
+            isEditingAbout = true
+            editPersonalInfo()
+        }
+    }
+
+    private fun editPersonalInfo() {
+        if (!isEditingAbout) {
+            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+            dialogBuilder
+                .setTitle("Your Facebook username")
+            val editText = EditText(context)
+            editText.hint = "e.g. matthieu2"
+            dialogBuilder
+                .setView(editText)
+
+            dialogBuilder
+                .setPositiveButton("Create", DialogInterface.OnClickListener { dialog, _ ->
+                    val entryString = editText.text.toString()
+
+                    if (entryString == "") {
+                        Toast.makeText(context, "Please write something...", Toast.LENGTH_LONG)
+                            .show()
+                    } else {
+                        saveEditedInfo(entryString)
+                    }
+                })
+            dialogBuilder
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                    dialog.cancel()
+                })
+
+            dialogBuilder
+                .show()
+        } else {
+            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+            dialogBuilder
+                .setTitle("Your About Info")
+            val editText = EditText(context)
+            editText.hint = "e.g. I like to read and ride a bicycle..."
+            dialogBuilder
+                .setView(editText)
+
+            dialogBuilder
+                .setPositiveButton("Create", DialogInterface.OnClickListener { dialog, _ ->
+                    val entryString = editText.text.toString()
+
+                    if (entryString == "") {
+                        Toast.makeText(context, "Please write something...", Toast.LENGTH_LONG)
+                            .show()
+                    } else {
+                        saveEditedInfo(entryString)
+                    }
+                })
+            dialogBuilder
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                    dialog.cancel()
+                })
+            dialogBuilder
+                .show()
+        }
+    }
+
+    private fun saveEditedInfo(entryString: String) {
+        if (!isEditingAbout) {
+            val mapLink = HashMap<String, Any>()
+            mapLink["facebook"] = "https://m.facebook.com/$entryString"
+
+            userReference.updateChildren(mapLink).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast
+                        .makeText(context, "Updated Successfully.", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        } else {
+            val mapLink = HashMap<String, Any>()
+            mapLink["about"] = entryString
+
+            userReference.updateChildren(mapLink).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast
+                        .makeText(context, "Updated Successfully", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
         }
     }
 
@@ -111,7 +209,7 @@ class SettingsFragment : Fragment() {
         val saveTask: StorageTask<*>
         saveTask = imageRef.putFile(imageUri)
 
-        saveTask.continueWithTask(Continuation <UploadTask.TaskSnapshot, Task<Uri>> { task ->
+        saveTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
                     throw it
