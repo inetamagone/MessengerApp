@@ -29,4 +29,6 @@
     <string name="settings_username">Settings Username</string>
     <string name="about_text_settings">%1$s</string>
     <string name="title_about">About You:</string>
+    <string name="username_message">Username</string>
+    <string name="message_hint_chat">Type a message...</string>
 </resources>
