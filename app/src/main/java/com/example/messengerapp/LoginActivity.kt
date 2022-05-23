@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.messengerapp.databinding.ActivityLoginBinding
 import com.example.messengerapp.databinding.ActivityRegistrationBinding
+import com.example.messengerapp.model.UserData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

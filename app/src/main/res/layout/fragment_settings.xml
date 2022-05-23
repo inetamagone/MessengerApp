@@ -3,15 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/space_40"
     tools:context=".fragments.SettingsFragment">
 
-    <TextView
+    <androidx.cardview.widget.CardView
+        android:id="@+id/settings_image_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/account_settings"
-        android:textSize="@dimen/text_30"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_10">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/cover_image_settings"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_180"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cover_placeholder"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_settings"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="@dimen/space_150"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="@dimen/space_60"
+                android:src="@drawable/image_placeholder"/>
+            <TextView
+                android:id="@+id/username_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_username"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/profile_image_settings"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginBottom="@dimen/space_10"
+                android:textSize="@dimen/text_18"
+                android:textColor="@color/black"/>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </RelativeLayout>
