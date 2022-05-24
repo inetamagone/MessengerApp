@@ -31,4 +31,7 @@
     <string name="title_about">About You:</string>
     <string name="username_message">Username</string>
     <string name="message_hint_chat">Type a message...</string>
+    <string name="text_seen">seen</string>
+    <string name="placeholder_left_message">Left Message</string>
+    <string name="placeholder_right_message">Right message</string>
 </resources>

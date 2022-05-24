@@ -34,7 +34,7 @@ class UserAdapter(
 
             // Clicking on particular user gives two options
             binding.root.setOnClickListener { 
-                val options = arrayOf<String>("Send a Message", "Visit Profile")
+                val options = arrayOf("Send a Message", "Visit Profile")
 
                 val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
                 dialogBuilder
@@ -82,10 +82,10 @@ class UserAdapter(
                     binding.searchOffline.visibility = View.VISIBLE
                 }
             }
-            else -> {
-                binding.searchOnline.visibility = View.GONE
-                binding.searchOffline.visibility = View.GONE
-            }
+//            else -> {
+//                binding.searchOnline.visibility = View.GONE
+//                binding.searchOffline.visibility = View.GONE
+//            }
         }
     }
 }

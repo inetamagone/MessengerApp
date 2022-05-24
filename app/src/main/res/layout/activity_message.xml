@@ -18,6 +18,17 @@
             android:layout_height="wrap_content"
             android:background="@color/purple_700"
             app:popupTheme="@style/Theme.MessengerApp.PopupOverlay">
+            <TextView
+                android:id="@+id/title_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/profile_image_chat"
+                android:layout_centerInParent="true"
+                android:text="Chat with"
+                android:textSize="@dimen/text_18"
+                android:textColor="@color/white"
+                android:textStyle="bold|italic"
+                android:layout_marginEnd="@dimen/space_20"/>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image_chat"
                 android:layout_width="@dimen/space_30"

@@ -82,9 +82,7 @@ class SearchFragment : Fragment() {
                     recyclerView.adapter = adapter
                 }
             }
-
             override fun onCancelled(databaseError: DatabaseError) {
-
             }
         })
     }
@@ -111,9 +109,7 @@ class SearchFragment : Fragment() {
                 adapter = UserAdapter(context!!, userList, false)
                 recyclerView.adapter = adapter
             }
-
             override fun onCancelled(p0: DatabaseError) {
-
             }
         })
     }

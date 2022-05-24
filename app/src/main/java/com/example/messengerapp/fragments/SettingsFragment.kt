@@ -67,12 +67,9 @@ class SettingsFragment : Fragment() {
                     binding.aboutSettings.text = user.getAbout()
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
-
         return binding.root
     }
 

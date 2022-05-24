@@ -35,13 +35,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
+        supportActionBar!!.title = ""
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
         refUser = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
-
-        val toolbar: Toolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-        supportActionBar!!.title = ""
 
         val tabLayout: TabLayout = binding.tabLayout
         val viewPager: ViewPager = binding.viewPager
@@ -58,18 +55,14 @@ class MainActivity : AppCompatActivity() {
         refUser!!.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("Main:", "snapshot exists!")
                 val user: UserData? = snapshot.getValue(UserData::class.java)
-
                 binding.userName.text = user!!.getUsername()
                 Picasso
                     .get()
                     .load(user.getProfile())
                     .into(binding.profileImage)
             }
-
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }
@@ -82,7 +75,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> {
-                FirebaseAuth.getInstance().signOut()
+                FirebaseAuth
+                    .getInstance()
+                    .signOut()
                 val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -112,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             titles.add(title)
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return titles[position]
         }
     }
