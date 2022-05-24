@@ -4,13 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ChatFragment">
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/chat"
-        android:textSize="@dimen/text_30"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
-
+        android:layout_height="match_parent" />
 </RelativeLayout>
