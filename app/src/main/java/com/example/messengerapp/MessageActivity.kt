@@ -36,7 +36,6 @@ class MessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_message)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -46,9 +45,9 @@ class MessageActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
             // Navigation back
-            val intent = Intent(this@MessageActivity, WelcomeActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+//            val intent = Intent(this@MessageActivity, WelcomeActivity::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//            startActivity(intent)
             finish()
         }
 

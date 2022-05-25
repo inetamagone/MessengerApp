@@ -36,4 +36,6 @@
     <string name="placeholder_right_message">Right message</string>
     <string name="seen">seen</string>
     <string name="sent">sent</string>
+    <string name="about_visit">About info:</string>
+    <string name="visit_username">Visit username</string>
 </resources>

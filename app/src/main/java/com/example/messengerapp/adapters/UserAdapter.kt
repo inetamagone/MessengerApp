@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.MessageActivity
 import com.example.messengerapp.R
+import com.example.messengerapp.VisitProfileActivity
 import com.example.messengerapp.databinding.SearchItemBinding
 import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
@@ -61,7 +62,9 @@ class UserAdapter(
                         context.startActivity(intent)
 
                     } else {
-                        TODO("Visit profile")
+                        val intent = Intent(context, VisitProfileActivity::class.java)
+                        intent.putExtra("chosen_user_id", userData.getUid())
+                        context.startActivity(intent)
                     }
                 })
                 dialogBuilder.show()
