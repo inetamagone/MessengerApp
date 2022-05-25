@@ -7,11 +7,18 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.MessageActivity
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.SearchItemBinding
+import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 
 class UserAdapter(
@@ -30,6 +37,13 @@ class UserAdapter(
                 .load(userData.getProfile())
                 .placeholder(R.drawable.profile)
                 .into(binding.searchImage)
+
+            if(isOnline) {
+                getLastMessage(userData.getUid(), binding.lastMessage)
+            } else {
+                binding.lastMessage.visibility = View.GONE
+            }
+
             setOnlineStatus(isOnline, userData, binding)
 
             // Clicking on particular user gives two options
@@ -82,10 +96,43 @@ class UserAdapter(
                     binding.searchOffline.visibility = View.VISIBLE
                 }
             }
-//            else -> {
-//                binding.searchOnline.visibility = View.GONE
-//                binding.searchOffline.visibility = View.GONE
-//            }
+            else -> {
+                binding.searchOnline.visibility = View.GONE
+                binding.searchOffline.visibility = View.GONE
+            }
         }
     }
+
+
+    private fun getLastMessage(onlineUserId: String, lastMsg: TextView) {
+        lastMessage = "defaultMsg" // no messages yet
+
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val reference = FirebaseDatabase.getInstance().reference.child("Chat")
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (snap in snapshot.children) {
+                    val chat: ChatData? = snap.getValue(ChatData::class.java)
+
+                    if (firebaseUser != null && chat != null) {
+                        if (chat.getReceiver() == firebaseUser.uid
+                            && chat.getSender() == onlineUserId
+                            ||  chat.getReceiver() == onlineUserId
+                            && chat.getSender() == firebaseUser.uid) {
+                            lastMessage = chat.getMessage()
+                        }
+                    }
+                }
+                when (lastMessage) {
+                    "defaultMsg" -> lastMsg.text = "No message"
+                    "Sent you an image" -> lastMsg.text = "Sent an image"
+                    else -> lastMsg.text = lastMessage
+                }
+                lastMessage = "defaultMsg"
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
 }

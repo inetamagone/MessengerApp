@@ -52,7 +52,6 @@
             android:layout_width="@dimen/space_100"
             android:layout_height="@dimen/space_100"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/space_6"
-            android:visibility="gone" />
+            android:layout_marginLeft="@dimen/space_6" />
     </RelativeLayout>
 </RelativeLayout>

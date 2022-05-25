@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ChatFragment">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_chat"
+        android:id="@+id/recycler_view_chat_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>
