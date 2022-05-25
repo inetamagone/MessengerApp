@@ -5,7 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.messengerapp.adapters.ChatAdapter
 import com.example.messengerapp.databinding.ActivityMessageBinding
+import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -27,6 +31,10 @@ class MessageActivity : AppCompatActivity() {
     var messageReceiver: String = ""
     lateinit var firebaseUser: FirebaseUser
 
+    private lateinit var adapter: ChatAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var chatList: List<ChatData>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
@@ -36,6 +44,11 @@ class MessageActivity : AppCompatActivity() {
         intent = intent
         messageReceiver = intent.getStringExtra("chosen_user_id").toString()
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
+
+        recyclerView = binding.chatRecyclerView
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        linearLayoutManager.stackFromEnd = true
+        recyclerView.layoutManager = linearLayoutManager
 
         // Get the username and picture of the message receiver
         val reference = FirebaseDatabase.getInstance().reference
@@ -50,6 +63,8 @@ class MessageActivity : AppCompatActivity() {
                     .get()
                     .load(user.getProfile())
                     .into(binding.profileImageChat)
+
+                getMessages(firebaseUser.uid, messageReceiver, user.getProfile())
             }
             override fun onCancelled(error: DatabaseError) {
 
@@ -161,5 +176,32 @@ class MessageActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getMessages(senderId: String, receiverId: String, receiverImageUrl: String) {
+        chatList = ArrayList()
+        val reference = FirebaseDatabase.getInstance().reference.child("Chat")
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                (chatList as ArrayList<ChatData>).clear()
+                for (snap in snapshot.children) {
+                    val chat = snap.getValue(ChatData::class.java)
+
+                    if (chat!!.getReceiver() == senderId && chat.getSender() == receiverId
+                        || chat.getReceiver() == receiverId && chat.getSender() == senderId) {
+
+                        // Populate arrayList with messages
+                        (chatList as ArrayList<ChatData>).add(chat)
+                    }
+                    adapter = ChatAdapter(this@MessageActivity, (chatList as ArrayList<ChatData>), receiverImageUrl)
+                    recyclerView.adapter = adapter
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }

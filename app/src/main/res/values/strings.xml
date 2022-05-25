@@ -34,4 +34,6 @@
     <string name="text_seen">seen</string>
     <string name="placeholder_left_message">Left Message</string>
     <string name="placeholder_right_message">Right message</string>
+    <string name="seen">seen</string>
+    <string name="sent">sent</string>
 </resources>

@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/right_image_profile"
+            android:layout_width="@dimen/space_40"
+            android:layout_height="@dimen/space_40"
+            android:src="@drawable/profile"
+            android:visibility="gone"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
@@ -23,12 +29,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="@dimen/space_10">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/right_image_profile"
-                    android:layout_width="@dimen/space_40"
-                    android:layout_height="@dimen/space_40"
-                    android:src="@drawable/profile" />
 
                 <TextView
                     android:id="@+id/right_message_text"

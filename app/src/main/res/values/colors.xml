@@ -10,4 +10,5 @@
 
     <color name="color_profile">#1C223C</color>
     <color name="green">#00c853</color>
+    <color name="light_grey">#eceff1</color>
 </resources>
