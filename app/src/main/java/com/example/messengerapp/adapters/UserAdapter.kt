@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso
 
 class UserAdapter(
     private val context: Context, private val userList: List<UserData>,
-    private var isOnline: Boolean
+    private var isChatCheck: Boolean
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder?>() {
 
     var lastMessage: String = ""
@@ -39,13 +39,31 @@ class UserAdapter(
                 .placeholder(R.drawable.profile)
                 .into(binding.searchImage)
 
-            if(isOnline) {
+            if(isChatCheck) {
                 getLastMessage(userData.getUid(), binding.lastMessage)
             } else {
                 binding.lastMessage.visibility = View.GONE
             }
 
-            setOnlineStatus(isOnline, userData, binding)
+            if (isChatCheck)
+            {
+                if (userData.getStatus() == "online")
+                {
+                    binding.searchOnline.visibility = View.VISIBLE
+                    binding.searchOffline.visibility = View.GONE
+                }
+                else
+                {
+                    binding.searchOnline.visibility = View.GONE
+                    binding.searchOffline.visibility = View.VISIBLE
+                }
+            }
+            else
+            {
+                binding.searchOnline.visibility = View.GONE
+                binding.searchOffline.visibility = View.GONE
+            }
+            //setOnlineStatus(isChatCheck, userData, binding)
 
             // Clicking on particular user gives two options
             binding.root.setOnClickListener { 
@@ -88,9 +106,9 @@ class UserAdapter(
     override fun getItemCount(): Int =
         userList.size
 
-    fun setOnlineStatus(isOnline: Boolean, userData: UserData, binding: SearchItemBinding) {
+    fun setOnlineStatus(isChatCheck: Boolean, userData: UserData, binding: SearchItemBinding) {
         when {
-            isOnline -> {
+            isChatCheck -> {
                 if (userData.getStatus() == "online") {
                     binding.searchOnline.visibility = View.VISIBLE
                     binding.searchOffline.visibility = View.GONE
@@ -127,7 +145,7 @@ class UserAdapter(
                     }
                 }
                 when (lastMessage) {
-                    "defaultMsg" -> lastMsg.text = "No message"
+                    "defaultMsg" -> lastMsg.text = context.getString(R.string.no_message)
                     "Sent you an image" -> lastMsg.text = "Sent an image"
                     else -> lastMsg.text = lastMessage
                 }

@@ -1,10 +1,10 @@
 package com.example.messengerapp.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.MessageItemLeftBinding
@@ -54,20 +54,10 @@ class ChatAdapter(
             if (position == chatList.size - 1) {
 
                 if (chatData.getIsSeen()) {
-
+                    Log.d("ChatAdapter", "chat.getIsSeen() : ${chatData.getIsSeen()}")
                     binding.rightSeenText.text = context.getString(R.string.seen)
-                    if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
-                        val layoutParameters: RelativeLayout.LayoutParams? = binding.rightSeenText as RelativeLayout.LayoutParams?
-                        layoutParameters!!.setMargins(0, 245, 10, 0)
-                        binding.rightSeenText.layoutParams = layoutParameters
-                    }
                 } else {
                     binding.rightSeenText.text = context.getString(R.string.sent)
-                    if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
-                        val layoutParameters: RelativeLayout.LayoutParams? = binding.rightSeenText as RelativeLayout.LayoutParams?
-                        layoutParameters!!.setMargins(0, 245, 10, 0)
-                        binding.rightSeenText.layoutParams = layoutParameters
-                    }
                 }
             } else {
                 binding.rightSeenText.visibility = View.GONE
@@ -99,35 +89,13 @@ class ChatAdapter(
             } else {
                 binding.leftMessageText.text = chatData.getMessage()
             }
-            // Set messages to sent or seen
-            if (position == chatList.size - 1) {
-
-                if (chatData.getIsSeen()) {
-
-                    binding.leftSeenText.text = context.getString(R.string.seen)
-                    if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
-                        val layoutParameters: RelativeLayout.LayoutParams? = binding.leftSeenText as RelativeLayout.LayoutParams?
-                        layoutParameters!!.setMargins(0, 245, 10, 0)
-                        binding.leftSeenText.layoutParams = layoutParameters
-                    }
-                } else {
-                    binding.leftSeenText.text = context.getString(R.string.sent)
-                    if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
-                        val layoutParameters: RelativeLayout.LayoutParams? = binding.leftSeenText as RelativeLayout.LayoutParams?
-                        layoutParameters!!.setMargins(0, 245, 10, 0)
-                        binding.leftSeenText.layoutParams = layoutParameters
-                    }
-                }
-            } else {
-                binding.leftSeenText.visibility = View.GONE
-            }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ChatAdapter.RightViewHolder -> holder.bind(chatList[position])
-            is ChatAdapter.LeftViewHolder -> holder.bind(chatList[position])
+            is RightViewHolder -> holder.bind(chatList[position])
+            is LeftViewHolder -> holder.bind(chatList[position])
         }
     }
 

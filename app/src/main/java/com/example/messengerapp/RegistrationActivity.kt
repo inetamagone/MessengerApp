@@ -10,8 +10,6 @@ import com.example.messengerapp.databinding.ActivityRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.delay
-import java.util.concurrent.TimeUnit
 
 class RegistrationActivity : AppCompatActivity() {
 
@@ -39,7 +37,6 @@ class RegistrationActivity : AppCompatActivity() {
         binding.buttonRegister.setOnClickListener {
             registerUser()
         }
-
     }
 
     private fun registerUser() {
@@ -88,6 +85,13 @@ class RegistrationActivity : AppCompatActivity() {
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         Log.d("RegistrationActivity", "User created!")
+                                        val intent = Intent(
+                                            this@RegistrationActivity,
+                                            MainActivity::class.java
+                                        )
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        startActivity(intent)
+                                        finish()
                                     } else {
                                         Log.d("RegistrationActivity", "User is NOT created!")
                                         Toast
@@ -99,13 +103,6 @@ class RegistrationActivity : AppCompatActivity() {
                                             .show()
                                     }
                                 }
-                            val intent = Intent(
-                                this@RegistrationActivity,
-                                MainActivity::class.java
-                            )
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                            finish()
                         } else {
                             Toast
                                 .makeText(

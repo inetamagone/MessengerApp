@@ -1,5 +1,6 @@
 package com.example.messengerapp.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -36,6 +37,12 @@ class ChatFragment : Fragment() {
     ): View {
         _binding = FragmentChatBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         recyclerView = binding.recyclerViewChatList
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -51,21 +58,14 @@ class ChatFragment : Fragment() {
                     val list = snap.getValue(ChatListData::class.java)
                     (chatList as ArrayList).add(list!!)
                 }
-                getChatList()
+                getChatList(requireContext())
             }
             override fun onCancelled(error: DatabaseError) {
             }
-
         })
-
-        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    private fun getChatList() {
+    private fun getChatList(context: Context) {
         userList = ArrayList()
         val reference = FirebaseDatabase.getInstance().reference.child("Users")
         reference.addValueEventListener(object : ValueEventListener {
@@ -80,7 +80,7 @@ class ChatFragment : Fragment() {
                         }
                     }
                 }
-                adapter = UserAdapter(context!!, (userList as ArrayList<UserData>), true)
+                adapter = UserAdapter(context, (userList as ArrayList<UserData>), true)
                 recyclerView.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {

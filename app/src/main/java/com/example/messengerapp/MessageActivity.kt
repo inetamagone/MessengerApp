@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,10 +45,6 @@ class MessageActivity : AppCompatActivity() {
         supportActionBar!!.title = ""
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            // Navigation back
-//            val intent = Intent(this@MessageActivity, WelcomeActivity::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-//            startActivity(intent)
             finish()
         }
 
@@ -96,7 +93,6 @@ class MessageActivity : AppCompatActivity() {
             intent.type = "image/*"
             startActivityForResult(Intent.createChooser(intent, "Choose Image"), 438)
         }
-
         seenMessage(messageReceiver)
     }
 
@@ -110,7 +106,7 @@ class MessageActivity : AppCompatActivity() {
         messageHashMap["receiver"] = messageReceiverId
         messageHashMap["message"] = message
         messageHashMap["messageId"] = messageKey
-        messageHashMap["is_seen"] = false
+        messageHashMap["isseen"] = false
         messageHashMap["url"] = ""
         reference.child("Chat")
             .child(messageKey!!)
@@ -144,9 +140,6 @@ class MessageActivity : AppCompatActivity() {
                     })
                 }
             }
-//        val userReference = FirebaseDatabase.getInstance().reference
-//            .child("Users")
-//            .child(senderId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -181,7 +174,7 @@ class MessageActivity : AppCompatActivity() {
                     attachmentHashMap["receiver"] = messageReceiver
                     attachmentHashMap["message"] = "Sent you an image"
                     attachmentHashMap["messageId"] = messageId
-                    attachmentHashMap["is_seen"] = false
+                    attachmentHashMap["isseen"] = false
                     attachmentHashMap["url"] = url
 
                     reference.child("Chat").child(messageId!!).setValue(attachmentHashMap)
@@ -207,6 +200,7 @@ class MessageActivity : AppCompatActivity() {
 
                         // Populate arrayList with messages
                         (chatList as ArrayList<ChatData>).add(chat)
+                        Log.d("MessageActivity", "in getMessage() : ${chat.getIsSeen()}")
                     }
                     adapter = ChatAdapter(
                         this@MessageActivity,
@@ -222,10 +216,10 @@ class MessageActivity : AppCompatActivity() {
         })
     }
 
-    var seenListener: ValueEventListener? = null
+    private var seenListener: ValueEventListener? = null
 
     private fun seenMessage(userId: String) {
-        val reference = FirebaseDatabase.getInstance().reference.child("Chats")
+        val reference = FirebaseDatabase.getInstance().reference.child("Chat")
 
         seenListener = reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -233,9 +227,11 @@ class MessageActivity : AppCompatActivity() {
                     val chat = snap.getValue(ChatData::class.java)
 
                     if (chat!!.getReceiver() == firebaseUser.uid && chat.getSender() == userId) {
+                        Log.d("MessageActivity", "IDs match")
                         val hashMap = HashMap<String, Any>()
-                        hashMap["isSeen"] = true
+                        hashMap["isseen"] = true
                         snap.ref.updateChildren(hashMap)
+                        Log.d("MessageActivity", "chat.getIsSeen() in seenMessage() : ${chat.getIsSeen()}")
                     }
                 }
             }

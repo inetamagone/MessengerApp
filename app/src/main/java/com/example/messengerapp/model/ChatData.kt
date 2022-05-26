@@ -5,7 +5,7 @@ class ChatData {
     private var receiver: String = ""
     private var message: String = ""
     private var messageId: String = ""
-    private var isSeen = false
+    private var isseen = false
     private var url: String = ""
 
     constructor()
@@ -14,14 +14,14 @@ class ChatData {
         receiver: String,
         message: String,
         messageId: String,
-        isSeen: Boolean,
+        isseen: Boolean,
         url: String
     ) {
         this.sender = sender
         this.receiver = receiver
         this.message = message
         this.messageId = messageId
-        this.isSeen = isSeen
+        this.isseen = isseen
         this.url = url
     }
 
@@ -54,10 +54,10 @@ class ChatData {
     }
 
     fun getIsSeen(): Boolean {
-        return isSeen
+        return isseen
     }
-    fun setIsSeen(isSeen: Boolean?) {
-        this.isSeen = isSeen!!
+    fun setIsSeen(isseen: Boolean?) {
+        this.isseen = isseen!!
     }
 
     fun getUrl(): String {

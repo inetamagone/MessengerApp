@@ -1,8 +1,10 @@
 package com.example.messengerapp.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.lang.Error
 
 class SearchFragment : Fragment() {
 
@@ -25,7 +28,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: UserAdapter
+    private var adapter: UserAdapter? = null
 
     private var userList: List<UserData> = ArrayList()
     private lateinit var searchField: EditText
@@ -45,7 +48,7 @@ class SearchFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         searchField = binding.searchField
 
-        getAllUsers()
+        getAllUsers(requireContext())
 
         binding.searchField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -62,7 +65,7 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun getAllUsers() {
+    private fun getAllUsers(context: Context) {
         val firebaseUserID = FirebaseAuth.getInstance().currentUser!!.uid
         val refUsers = FirebaseDatabase.getInstance().reference.child("Users")
 
@@ -78,10 +81,11 @@ class SearchFragment : Fragment() {
                             (userList as ArrayList<UserData>).add(user)
                         }
                     }
-                    adapter = UserAdapter(context!!, userList, false)
+                    adapter = UserAdapter(context, userList, false)
                     recyclerView.adapter = adapter
                 }
             }
+
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
@@ -109,6 +113,7 @@ class SearchFragment : Fragment() {
                 adapter = UserAdapter(context!!, userList, false)
                 recyclerView.adapter = adapter
             }
+
             override fun onCancelled(p0: DatabaseError) {
             }
         })

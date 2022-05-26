@@ -38,4 +38,5 @@
     <string name="sent">sent</string>
     <string name="about_visit">About info:</string>
     <string name="visit_username">Visit username</string>
+    <string name="no_message">No message</string>
 </resources>

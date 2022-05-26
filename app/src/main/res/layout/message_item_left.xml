@@ -3,7 +3,7 @@
     android:layout_width="@dimen/space_295"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/space_10">
+    android:padding="@dimen/space_6">
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/space_10">
+            android:padding="@dimen/space_6">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/left_image_profile"
                 android:layout_width="@dimen/space_40"
@@ -29,18 +29,11 @@
                 android:textColor="@color/black"
                 android:padding="@dimen/space_10" />
         </LinearLayout>
-        <TextView
-            android:id="@+id/left_seen_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_seen"
-            android:layout_gravity="center_horizontal|bottom"
-            android:visibility="gone"/>
     </com.google.android.material.card.MaterialCardView>
     <ImageView
         android:id="@+id/left_image_view"
-        android:layout_width="@dimen/space_100"
-        android:layout_height="@dimen/space_100"
+        android:layout_width="@dimen/space_80"
+        android:layout_height="@dimen/space_80"
         android:layout_toRightOf="@+id/left_image_profile"
         android:layout_marginLeft="@dimen/space_6"
         android:visibility="gone" />

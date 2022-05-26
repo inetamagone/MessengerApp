@@ -7,7 +7,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +45,12 @@ class SettingsFragment : Fragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         userReference =
             FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser.uid)
@@ -70,11 +75,7 @@ class SettingsFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         // Create a new item in Firebase
         storageRef = FirebaseStorage.getInstance().reference.child("User images")
 

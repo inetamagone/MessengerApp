@@ -15,4 +15,5 @@
     <dimen name="space_60">60dp</dimen>
     <dimen name="space_295">295dp</dimen>
     <dimen name="space_100">100dp</dimen>
+    <dimen name="space_80">80dp</dimen>
 </resources>
