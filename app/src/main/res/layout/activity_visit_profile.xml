@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_10"
-                android:text="@string/about_text_settings"
+                android:text="@string/tell_about_hint"
                 android:textSize="@dimen/text_18" />
 
             <ImageView
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_20"
         android:background="@color/purple_700"
-        android:text="Send a Message"
+        android:text="@string/send_message"
         android:textColor="@color/white"
         android:textSize="@dimen/space_16"
         android:layout_marginStart="@dimen/space_6"

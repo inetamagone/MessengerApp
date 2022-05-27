@@ -97,83 +97,89 @@ class SettingsFragment : Fragment() {
     }
 
     private fun editPersonalInfo() {
-        if (!isEditingAbout) {
-            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-            dialogBuilder
-                .setTitle(getString(R.string.title_fb_username))
-            val editText = EditText(context)
-            editText.hint = getString(R.string.hint_username_example)
-            dialogBuilder
-                .setView(editText)
+        when {
+            !isEditingAbout -> {
+                val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+                dialogBuilder
+                    .setTitle(getString(R.string.title_fb_username))
+                val editText = EditText(context)
+                editText.hint = getString(R.string.hint_username_example)
+                dialogBuilder
+                    .setView(editText)
 
-            dialogBuilder
-                .setPositiveButton(getString(R.string.create)) { _, _ ->
-                    val entryString = editText.text.toString()
+                dialogBuilder
+                    .setPositiveButton(getString(R.string.create)) { _, _ ->
+                        val entryString = editText.text.toString()
 
-                    if (entryString == "") {
-                        Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
-                            .show()
-                    } else {
-                        saveEditedInfo(entryString)
+                        if (entryString == "") {
+                            Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            saveEditedInfo(entryString)
+                        }
                     }
-                }
-            dialogBuilder
-                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                    dialog.cancel()
-                }
-
-            dialogBuilder
-                .show()
-        } else {
-            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
-            dialogBuilder
-                .setTitle(getString(R.string.title_about_info))
-            val editText = EditText(context)
-            editText.hint = getString(R.string.like_ride_bicycle)
-            dialogBuilder
-                .setView(editText)
-
-            dialogBuilder
-                .setPositiveButton(getString(R.string.create)) { _, _ ->
-                    val entryString = editText.text.toString()
-
-                    if (entryString == "") {
-                        Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
-                            .show()
-                    } else {
-                        saveEditedInfo(entryString)
+                dialogBuilder
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                        dialog.cancel()
                     }
-                }
-            dialogBuilder
-                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                    dialog.cancel()
-                }
-            dialogBuilder
-                .show()
+
+                dialogBuilder
+                    .show()
+            }
+            else -> {
+                val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+                dialogBuilder
+                    .setTitle(getString(R.string.title_about_info))
+                val editText = EditText(context)
+                editText.hint = getString(R.string.like_ride_bicycle)
+                dialogBuilder
+                    .setView(editText)
+
+                dialogBuilder
+                    .setPositiveButton(getString(R.string.create)) { _, _ ->
+                        val entryString = editText.text.toString()
+
+                        if (entryString == "") {
+                            Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            saveEditedInfo(entryString)
+                        }
+                    }
+                dialogBuilder
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                        dialog.cancel()
+                    }
+                dialogBuilder
+                    .show()
+            }
         }
     }
 
     private fun saveEditedInfo(entryString: String) {
-        if (!isEditingAbout) {
-            val mapLink = HashMap<String, Any>()
-            mapLink["facebook"] = "https://m.facebook.com/$entryString"
+        when {
+            !isEditingAbout -> {
+                val mapLink = HashMap<String, Any>()
+                mapLink["facebook"] = "https://m.facebook.com/$entryString"
 
-            userReference.updateChildren(mapLink).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast
-                        .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
-                        .show()
+                userReference.updateChildren(mapLink).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast
+                            .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
-        } else {
-            val mapLink = HashMap<String, Any>()
-            mapLink["about"] = entryString
+            else -> {
+                val mapLink = HashMap<String, Any>()
+                mapLink["about"] = entryString
 
-            userReference.updateChildren(mapLink).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast
-                        .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
-                        .show()
+                userReference.updateChildren(mapLink).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast
+                            .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         }

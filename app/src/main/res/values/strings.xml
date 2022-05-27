@@ -22,7 +22,6 @@
     <string name="username_search">Username</string>
     <string name="search_users_hint">Search users</string>
     <string name="settings_username">Settings Username</string>
-    <string name="about_text_settings">%1$s</string>
     <string name="title_about">About You:</string>
     <string name="username_message">Username</string>
     <string name="message_hint_chat">Type a message...</string>
@@ -63,4 +62,8 @@
     <string name="fb_placeholder">https://m.facebook.com</string>
     <string name="sent_you_an_image">Sent you an image</string>
     <string name="sent_image">Sent an image</string>
+    <string name="send_message">Send a Message</string>
+    <string name="register">Register</string>
+    <string name="welcome_to_messengerapp">Welcome to MessengerApp</string>
+    <string name="btn_fb">My Facebook link</string>
 </resources>
