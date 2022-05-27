@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/search_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="@dimen/space_10"
+        android:layout_marginTop="@dimen/space_10"
+        android:src="@drawable/profile" />
+    <TextView
+        android:id="@+id/search_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/search_image"
+        android:layout_marginStart="@dimen/space_40"
+        android:layout_centerInParent="true"
+        android:text="@string/username_search"
+        android:textSize="@dimen/text_20"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/search_online"
+        android:layout_width="@dimen/space_16"
+        android:layout_height="@dimen/space_16"
+        android:src="@drawable/online"
+        android:layout_toRightOf="@+id/search_username"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/search_offline"
+        android:layout_width="@dimen/space_16"
+        android:layout_height="@dimen/space_16"
+        android:src="@drawable/offline"
+        android:layout_toRightOf="@+id/search_username"
+        android:layout_marginStart="@dimen/space_20"
+        android:layout_centerInParent="true"
+        android:visibility="visible" />
+    <TextView
+        android:id="@+id/last_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_40"
+        android:layout_marginEnd="@dimen/space_40"
+        android:layout_below="@+id/search_username"
+        android:layout_marginTop="@dimen/space_30"
+        android:layout_toEndOf="@+id/search_image"
+        android:textSize="@dimen/text_18"
+        android:textColor="@color/black"
+        android:maxLines="1"/>
+</RelativeLayout>

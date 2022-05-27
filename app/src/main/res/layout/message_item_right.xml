@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/space_6">
+
+    <RelativeLayout
+        android:layout_width="@dimen/space_295"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/right_image_profile"
+            android:layout_width="@dimen/space_6"
+            android:layout_height="@dimen/space_6"
+            android:src="@drawable/profile"
+            android:visibility="gone" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/teal_200"
+            app:cardCornerRadius="@dimen/space_40">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/space_6">
+
+                <TextView
+                    android:id="@+id/right_message_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_20"
+                    android:padding="@dimen/space_10"
+                    android:text="@string/placeholder_right_message"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_18" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/right_seen_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/right_image_view"
+            android:layout_width="@dimen/space_80"
+            android:layout_height="@dimen/space_80"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/space_6" />
+    </RelativeLayout>
+</RelativeLayout>

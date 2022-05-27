@@ -4,12 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.SearchFragment">
-    <TextView
+    <EditText
+        android:id="@+id/search_field"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/search"
-        android:textSize="@dimen/text_30"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
+        android:layout_height="wrap_content"
+        android:hint="@string/search_users_hint"
+        android:layout_margin="@dimen/space_10" >
+    </EditText>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
+        android:layout_below="@+id/search_field"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

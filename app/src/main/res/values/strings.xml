@@ -1,28 +1,66 @@
 <resources>
     <string name="app_name">MessengerApp</string>
     <string name="action_settings">Settings</string>
-
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="username">username</string>
     <string name="chat">Chat</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings">Settings</string>
     <string name="account_settings">Account Settings</string>
     <string name="search">Search</string>
     <string name="title_activity_registration">RegistrationActivity</string>
-    <!-- Strings used for fragments for navigation -->
+
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="username_register">Username</string>
     <string name="e_mail_register">E-mail</string>
     <string name="password_register">password</string>
     <string name="login">Login</string>
     <string name="register_welcome_btn">Register</string>
     <string name="log_out">Log out</string>
+    <string name="username_search">Username</string>
+    <string name="search_users_hint">Search users</string>
+    <string name="settings_username">Settings Username</string>
+    <string name="about_text_settings">%1$s</string>
+    <string name="title_about">About You:</string>
+    <string name="username_message">Username</string>
+    <string name="message_hint_chat">Type a message...</string>
+    <string name="text_seen">seen</string>
+    <string name="placeholder_left_message">Left Message</string>
+    <string name="placeholder_right_message">Right message</string>
+    <string name="seen">seen</string>
+    <string name="sent">sent</string>
+    <string name="about_visit">About info:</string>
+    <string name="visit_username">Visit username</string>
+    <string name="no_message">No message</string>
+    <string name="default_msg">defaultMsg</string>
+    <string name="go_to_chat_action">Go to Chat</string>
+    <string name="view_profile_action">View Profile</string>
+    <string name="actions_title">Actions</string>
+    <string name="updated_successfully">Updated Successfully</string>
+    <string name="image_loading">Image is loading..</string>
+    <string name="write_something">Please write something...</string>
+    <string name="like_ride_bicycle">e.g. I like to read and ride a bicycle...</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="title_about_info">Your About Info</string>
+    <string name="hint_username_example">e.g. matthieu2</string>
+    <string name="title_fb_username">Your Facebook username</string>
+    <string name="enter_email">Please enter an e-mail</string>
+    <string name="enter_password">Please enter a password</string>
+    <string name="error_message">\"Error Message: \"</string>
+    <string name="bar_title">Login</string>
+    <string name="sending_image">Sending image...</string>
+    <string name="title_registration">Registration</string>
+    <string name="enter_username">Please enter a username</string>
+    <string name="tell_about_hint">Tell something about you...</string>
+    <string name="offline">offline</string>
+    <string name="online">online</string>
+    <string name="title_choose_image">Choose Image</string>
+    <string name="profile_placeholder"><![CDATA[https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/image_placeholder.png?alt=media&token=a801f1f3-261b-4e4d-ad19-d48049290c21]]></string>
+    <string name="cover_placeholder"><![CDATA[https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/cover_placeholder.jpg?alt=media&token=90e49e38-12d5-4dcf-873a-a1f635c70f91]]></string>
+    <string name="fb_placeholder">https://m.facebook.com</string>
+    <string name="sent_you_an_image">Sent you an image</string>
+    <string name="sent_image">Sent an image</string>
 </resources>

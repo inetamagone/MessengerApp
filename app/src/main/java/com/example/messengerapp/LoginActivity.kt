@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.messengerapp.databinding.ActivityLoginBinding
-import com.example.messengerapp.databinding.ActivityRegistrationBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -19,13 +16,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val toolbar: Toolbar = binding.toolbarLogin
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Login"
+        supportActionBar!!.title = getString(R.string.bar_title)
         // Back navigation
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
@@ -46,12 +42,12 @@ class LoginActivity : AppCompatActivity() {
         when {
             email == "" -> {
                 Toast
-                    .makeText(this, "Please enter an e-mail", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT)
                     .show()
             }
             password == "" -> {
                 Toast
-                    .makeText(this, "Please enter a password", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT)
                     .show()
             }
             else -> {
@@ -63,9 +59,14 @@ class LoginActivity : AppCompatActivity() {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                             startActivity(intent)
                             finish()
+
                         } else {
                             Toast
-                                .makeText(this, "Error Message: " + task.exception?.message.toString(), Toast.LENGTH_SHORT)
+                                .makeText(
+                                    this,
+                                    getString(R.string.error_message) + task.exception?.message.toString(),
+                                    Toast.LENGTH_SHORT
+                                )
                                 .show()
                         }
                     }

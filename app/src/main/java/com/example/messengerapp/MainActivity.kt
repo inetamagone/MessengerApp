@@ -2,11 +2,9 @@ package com.example.messengerapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -26,22 +24,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    var refUser: DatabaseReference? = null
-    var firebaseUser: FirebaseUser? = null
+    private var refUser: DatabaseReference? = null
+    private var firebaseUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setSupportActionBar(binding.toolbarMain)
+        supportActionBar!!.title = ""
 
         firebaseUser = FirebaseAuth.getInstance().currentUser
         refUser = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
-
-        val toolbar: Toolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-        supportActionBar!!.title = ""
 
         val tabLayout: TabLayout = binding.tabLayout
         val viewPager: ViewPager = binding.viewPager
@@ -58,9 +53,7 @@ class MainActivity : AppCompatActivity() {
         refUser!!.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("Main:", "snapshot exists!")
                 val user: UserData? = snapshot.getValue(UserData::class.java)
-
                 binding.userName.text = user!!.getUsername()
                 Picasso
                     .get()
@@ -69,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
             }
         })
     }
@@ -82,7 +74,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> {
-                FirebaseAuth.getInstance().signOut()
+                FirebaseAuth
+                    .getInstance()
+                    .signOut()
                 val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -96,8 +90,8 @@ class MainActivity : AppCompatActivity() {
     internal class ViewPagerAdapter(fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager) {
 
-        private val fragments: ArrayList<Fragment> = ArrayList<Fragment>()
-        private var titles: ArrayList<String> = ArrayList<String>()
+        private val fragments: ArrayList<Fragment> = ArrayList()
+        private var titles: ArrayList<String> = ArrayList()
 
         override fun getCount(): Int {
             return fragments.size
@@ -112,8 +106,26 @@ class MainActivity : AppCompatActivity() {
             titles.add(title)
         }
 
-        override fun getPageTitle(position: Int): CharSequence? {
+        override fun getPageTitle(position: Int): CharSequence {
             return titles[position]
         }
+    }
+
+    private fun updateStatus(status: String) {
+        val reference =
+            FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
+        val hashMap = HashMap<String, Any>()
+        hashMap["status"] = status
+        reference.updateChildren(hashMap)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateStatus(getString(R.string.online))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        updateStatus(getString(R.string.offline))
     }
 }
