@@ -34,29 +34,56 @@ class UserData {
     fun getUid(): String {
         return uid
     }
+    fun setUid(uid: String) {
+        this.uid = uid
+    }
     // username
     fun getUsername(): String {
         return username
+    }
+    fun setUsername(username: String) {
+        this.username = username
     }
     // profile
     fun getProfile(): String {
         return profile
     }
+    fun setProfile(profile: String) {
+        this.profile = profile
+    }
     // cover
     fun getCover(): String {
         return cover
+    }
+    fun setCover(cover: String) {
+        this.cover = cover
     }
     // status
     fun getStatus(): String {
         return status
     }
-
+    fun setStatus(status: String) {
+        this.status = status
+    }
+// search
+    fun getSearch(): String {
+        return search
+    }
+    fun setSearch(search: String) {
+        this.search = search
+    }
     // facebook
     fun getFacebook(): String {
         return facebook
     }
+    fun setFacebook(facebook: String) {
+        this.facebook = facebook
+    }
     // about
     fun getAbout(): String {
         return about
+    }
+    fun setAbout(about: String) {
+        this.about = about
     }
 }
