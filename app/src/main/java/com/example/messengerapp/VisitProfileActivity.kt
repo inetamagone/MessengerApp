@@ -17,7 +17,7 @@ private lateinit var binding: ActivityVisitProfileBinding
 class VisitProfileActivity : AppCompatActivity() {
 
     private var visitedUserId = ""
-    lateinit var user: UserData
+    private lateinit var user: UserData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

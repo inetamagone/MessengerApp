@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,7 @@ private lateinit var binding: ActivityMessageBinding
 
 class MessageActivity : AppCompatActivity() {
 
-    var messageReceiver: String = ""
+    private var messageReceiver: String = ""
     lateinit var firebaseUser: FirebaseUser
 
     private lateinit var adapter: ChatAdapter
@@ -91,7 +90,12 @@ class MessageActivity : AppCompatActivity() {
             val intent = Intent()
             intent.action = Intent.ACTION_GET_CONTENT
             intent.type = "image/*"
-            startActivityForResult(Intent.createChooser(intent, "Choose Image"), 438)
+            startActivityForResult(
+                Intent.createChooser(
+                    intent,
+                    getString(R.string.title_choose_image)
+                ), 438
+            )
         }
         seenMessage(messageReceiver)
     }
@@ -147,7 +151,7 @@ class MessageActivity : AppCompatActivity() {
         if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.data != null) {
 
             val progressDialog = ProgressDialog(this)
-            progressDialog.setMessage("Sending image...")
+            progressDialog.setMessage(getString(R.string.sending_image))
             progressDialog.show()
 
             val fileUri = data.data
@@ -159,7 +163,7 @@ class MessageActivity : AppCompatActivity() {
             val saveTask: StorageTask<*>
             saveTask = filepath.putFile(fileUri!!)
 
-            saveTask.continueWithTask<Uri?>(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
+            saveTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->
                 if (!task.isSuccessful) {
                     task.exception?.let {
                         throw it
@@ -172,7 +176,7 @@ class MessageActivity : AppCompatActivity() {
                     val attachmentHashMap = HashMap<String, Any?>()
                     attachmentHashMap["sender"] = firebaseUser.uid
                     attachmentHashMap["receiver"] = messageReceiver
-                    attachmentHashMap["message"] = "Sent you an image"
+                    attachmentHashMap["message"] = getString(R.string.sent_you_an_image)
                     attachmentHashMap["messageId"] = messageId
                     attachmentHashMap["isseen"] = false
                     attachmentHashMap["url"] = url
@@ -200,7 +204,6 @@ class MessageActivity : AppCompatActivity() {
 
                         // Populate arrayList with messages
                         (chatList as ArrayList<ChatData>).add(chat)
-                        Log.d("MessageActivity", "in getMessage() : ${chat.getIsSeen()}")
                     }
                     adapter = ChatAdapter(
                         this@MessageActivity,
@@ -210,6 +213,7 @@ class MessageActivity : AppCompatActivity() {
                     recyclerView.adapter = adapter
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
 
@@ -227,14 +231,13 @@ class MessageActivity : AppCompatActivity() {
                     val chat = snap.getValue(ChatData::class.java)
 
                     if (chat!!.getReceiver() == firebaseUser.uid && chat.getSender() == userId) {
-                        Log.d("MessageActivity", "IDs match")
                         val hashMap = HashMap<String, Any>()
                         hashMap["isseen"] = true
                         snap.ref.updateChildren(hashMap)
-                        Log.d("MessageActivity", "chat.getIsSeen() in seenMessage() : ${chat.getIsSeen()}")
                     }
                 }
             }
+
             override fun onCancelled(p0: DatabaseError) {
             }
         })

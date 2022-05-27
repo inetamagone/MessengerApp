@@ -3,7 +3,6 @@ package com.example.messengerapp.fragments
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.example.messengerapp.R
 import com.example.messengerapp.databinding.FragmentSettingsBinding
 import com.example.messengerapp.model.UserData
 import com.google.android.gms.tasks.Continuation
@@ -31,8 +31,8 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var userReference: DatabaseReference
-    lateinit var firebaseUser: FirebaseUser
+    private lateinit var userReference: DatabaseReference
+    private lateinit var firebaseUser: FirebaseUser
 
     private lateinit var imageUri: Uri
     private lateinit var storageRef: StorageReference
@@ -76,7 +76,6 @@ class SettingsFragment : Fragment() {
             }
         })
 
-        // Create a new item in Firebase
         storageRef = FirebaseStorage.getInstance().reference.child("User images")
 
         binding.editCoverImage.setOnClickListener {
@@ -101,54 +100,54 @@ class SettingsFragment : Fragment() {
         if (!isEditingAbout) {
             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
             dialogBuilder
-                .setTitle("Your Facebook username")
+                .setTitle(getString(R.string.title_fb_username))
             val editText = EditText(context)
-            editText.hint = "e.g. matthieu2"
+            editText.hint = getString(R.string.hint_username_example)
             dialogBuilder
                 .setView(editText)
 
             dialogBuilder
-                .setPositiveButton("Create", DialogInterface.OnClickListener { dialog, _ ->
+                .setPositiveButton(getString(R.string.create)) { _, _ ->
                     val entryString = editText.text.toString()
 
                     if (entryString == "") {
-                        Toast.makeText(context, "Please write something...", Toast.LENGTH_LONG)
+                        Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
                             .show()
                     } else {
                         saveEditedInfo(entryString)
                     }
-                })
+                }
             dialogBuilder
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.cancel()
-                })
+                }
 
             dialogBuilder
                 .show()
         } else {
             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
             dialogBuilder
-                .setTitle("Your About Info")
+                .setTitle(getString(R.string.title_about_info))
             val editText = EditText(context)
-            editText.hint = "e.g. I like to read and ride a bicycle..."
+            editText.hint = getString(R.string.like_ride_bicycle)
             dialogBuilder
                 .setView(editText)
 
             dialogBuilder
-                .setPositiveButton("Create", DialogInterface.OnClickListener { dialog, _ ->
+                .setPositiveButton(getString(R.string.create)) { _, _ ->
                     val entryString = editText.text.toString()
 
                     if (entryString == "") {
-                        Toast.makeText(context, "Please write something...", Toast.LENGTH_LONG)
+                        Toast.makeText(context, getString(R.string.write_something), Toast.LENGTH_LONG)
                             .show()
                     } else {
                         saveEditedInfo(entryString)
                     }
-                })
+                }
             dialogBuilder
-                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, _ ->
+                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.cancel()
-                })
+                }
             dialogBuilder
                 .show()
         }
@@ -162,7 +161,7 @@ class SettingsFragment : Fragment() {
             userReference.updateChildren(mapLink).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast
-                        .makeText(context, "Updated Successfully.", Toast.LENGTH_LONG)
+                        .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
                         .show()
                 }
             }
@@ -173,7 +172,7 @@ class SettingsFragment : Fragment() {
             userReference.updateChildren(mapLink).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast
-                        .makeText(context, "Updated Successfully", Toast.LENGTH_LONG)
+                        .makeText(context, getString(R.string.updated_successfully), Toast.LENGTH_LONG)
                         .show()
                 }
             }
@@ -199,7 +198,7 @@ class SettingsFragment : Fragment() {
 
     private fun saveImageToFirestore() {
         val progressDialog = ProgressDialog(context)
-        progressDialog.setMessage("Image is loading..")
+        progressDialog.setMessage(getString(R.string.image_loading))
         progressDialog.show()
 
         val imageRef = storageRef.child(System.currentTimeMillis().toString() + ".jpg")

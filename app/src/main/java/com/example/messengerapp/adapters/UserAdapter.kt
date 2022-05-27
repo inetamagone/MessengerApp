@@ -2,7 +2,6 @@ package com.example.messengerapp.adapters
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +26,7 @@ class UserAdapter(
     private var isChatCheck: Boolean
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder?>() {
 
-    var lastMessage: String = ""
+    private var lastMessage: String = ""
 
     inner class UserViewHolder(private val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -44,35 +43,17 @@ class UserAdapter(
             } else {
                 binding.lastMessage.visibility = View.GONE
             }
-
-            if (isChatCheck)
-            {
-                if (userData.getStatus() == "online")
-                {
-                    binding.searchOnline.visibility = View.VISIBLE
-                    binding.searchOffline.visibility = View.GONE
-                }
-                else
-                {
-                    binding.searchOnline.visibility = View.GONE
-                    binding.searchOffline.visibility = View.VISIBLE
-                }
-            }
-            else
-            {
-                binding.searchOnline.visibility = View.GONE
-                binding.searchOffline.visibility = View.GONE
-            }
-            //setOnlineStatus(isChatCheck, userData, binding)
+            setOnlineStatus(isChatCheck, userData, binding)
 
             // Clicking on particular user gives two options
             binding.root.setOnClickListener { 
-                val options = arrayOf("Send a Message", "Visit Profile")
+                val options = arrayOf(context.getString(R.string.go_to_chat_action), context.getString(
+                                    R.string.view_profile_action))
 
                 val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
                 dialogBuilder
-                    .setTitle("Actions")
-                dialogBuilder.setItems(options, DialogInterface.OnClickListener { dialogInterface, choice ->
+                    .setTitle(context.getString(R.string.actions_title))
+                dialogBuilder.setItems(options) { _, choice ->
                     if (choice == 0) {
                         // Pass the UID of the chosen user
                         val intent = Intent(context, MessageActivity::class.java)
@@ -84,7 +65,7 @@ class UserAdapter(
                         intent.putExtra("chosen_user_id", userData.getUid())
                         context.startActivity(intent)
                     }
-                })
+                }
                 dialogBuilder.show()
             }
         }
@@ -109,7 +90,7 @@ class UserAdapter(
     fun setOnlineStatus(isChatCheck: Boolean, userData: UserData, binding: SearchItemBinding) {
         when {
             isChatCheck -> {
-                if (userData.getStatus() == "online") {
+                if (userData.getStatus() == context.getString(R.string.online)) {
                     binding.searchOnline.visibility = View.VISIBLE
                     binding.searchOffline.visibility = View.GONE
                 } else {
@@ -123,10 +104,9 @@ class UserAdapter(
             }
         }
     }
-
-
+    
     private fun getLastMessage(onlineUserId: String, lastMsg: TextView) {
-        lastMessage = "defaultMsg" // no messages yet
+        lastMessage = context.getString(R.string.default_msg) // no messages yet
 
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val reference = FirebaseDatabase.getInstance().reference.child("Chat")
@@ -145,11 +125,12 @@ class UserAdapter(
                     }
                 }
                 when (lastMessage) {
-                    "defaultMsg" -> lastMsg.text = context.getString(R.string.no_message)
-                    "Sent you an image" -> lastMsg.text = "Sent an image"
+                    context.getString(R.string.default_msg) -> lastMsg.text = context.getString(R.string.no_message)
+                    context.getString(R.string.sent_you_an_image) -> lastMsg.text = context.getString(
+                                            R.string.sent_image)
                     else -> lastMsg.text = lastMessage
                 }
-                lastMessage = "defaultMsg"
+                lastMessage = context.getString(R.string.default_msg)
             }
             override fun onCancelled(error: DatabaseError) {
             }

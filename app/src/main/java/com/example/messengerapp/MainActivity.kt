@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private var refUser: DatabaseReference? = null
-    var firebaseUser: FirebaseUser? = null
+    private var firebaseUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                     .load(user.getProfile())
                     .into(binding.profileImage)
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })
@@ -89,8 +90,8 @@ class MainActivity : AppCompatActivity() {
     internal class ViewPagerAdapter(fragmentManager: FragmentManager) :
         FragmentPagerAdapter(fragmentManager) {
 
-        private val fragments: ArrayList<Fragment> = ArrayList<Fragment>()
-        private var titles: ArrayList<String> = ArrayList<String>()
+        private val fragments: ArrayList<Fragment> = ArrayList()
+        private var titles: ArrayList<String> = ArrayList()
 
         override fun getCount(): Int {
             return fragments.size
@@ -111,7 +112,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateStatus(status: String) {
-        val reference = FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
+        val reference =
+            FirebaseDatabase.getInstance().reference.child("Users").child(firebaseUser!!.uid)
         val hashMap = HashMap<String, Any>()
         hashMap["status"] = status
         reference.updateChildren(hashMap)
@@ -119,11 +121,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        updateStatus("online")
+        updateStatus(getString(R.string.online))
     }
 
     override fun onPause() {
         super.onPause()
-        updateStatus("offline")
+        updateStatus(getString(R.string.offline))
     }
 }

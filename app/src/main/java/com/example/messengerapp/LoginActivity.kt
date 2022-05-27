@@ -6,12 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.messengerapp.databinding.ActivityLoginBinding
-import com.example.messengerapp.databinding.ActivityRegistrationBinding
-import com.example.messengerapp.model.UserData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,7 +21,7 @@ class LoginActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = binding.toolbarLogin
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Login"
+        supportActionBar!!.title = getString(R.string.bar_title)
         // Back navigation
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
@@ -47,12 +42,12 @@ class LoginActivity : AppCompatActivity() {
         when {
             email == "" -> {
                 Toast
-                    .makeText(this, "Please enter an e-mail", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT)
                     .show()
             }
             password == "" -> {
                 Toast
-                    .makeText(this, "Please enter a password", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT)
                     .show()
             }
             else -> {
@@ -67,7 +62,11 @@ class LoginActivity : AppCompatActivity() {
 
                         } else {
                             Toast
-                                .makeText(this, "Error Message: " + task.exception?.message.toString(), Toast.LENGTH_SHORT)
+                                .makeText(
+                                    this,
+                                    getString(R.string.error_message) + task.exception?.message.toString(),
+                                    Toast.LENGTH_SHORT
+                                )
                                 .show()
                         }
                     }

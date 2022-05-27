@@ -2,7 +2,6 @@ package com.example.messengerapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,7 +25,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         val toolbar: Toolbar = binding.toolbarRegister
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Registration"
+        supportActionBar!!.title = getString(R.string.title_registration)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
             val intent = Intent(this@RegistrationActivity, WelcomeActivity::class.java)
@@ -47,17 +46,17 @@ class RegistrationActivity : AppCompatActivity() {
         when {
             username == "" -> {
                 Toast
-                    .makeText(this, "Please enter a username", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_username), Toast.LENGTH_SHORT)
                     .show()
             }
             email == "" -> {
                 Toast
-                    .makeText(this, "Please enter an e-mail", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT)
                     .show()
             }
             password == "" -> {
                 Toast
-                    .makeText(this, "Please enter a password", Toast.LENGTH_SHORT)
+                    .makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT)
                     .show()
             }
             else -> {
@@ -72,19 +71,16 @@ class RegistrationActivity : AppCompatActivity() {
                             val userHashMap = HashMap<String, Any>()
                             userHashMap["uid"] = firebaseUserId!!
                             userHashMap["username"] = username
-                            userHashMap["profile"] =
-                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/image_placeholder.png?alt=media&token=a801f1f3-261b-4e4d-ad19-d48049290c21"
-                            userHashMap["cover"] =
-                                "https://firebasestorage.googleapis.com/v0/b/messengerapp-d46ca.appspot.com/o/cover_placeholder.jpg?alt=media&token=90e49e38-12d5-4dcf-873a-a1f635c70f91"
-                            userHashMap["status"] = "offline"
+                            userHashMap["profile"] = getString(R.string.profile_placeholder)
+                            userHashMap["cover"] = getString(R.string.cover_placeholder)
+                            userHashMap["status"] = getString(R.string.offline)
                             userHashMap["search"] = username.toLowerCase()
-                            userHashMap["facebook"] = "https://m.facebook.com"
-                            userHashMap["about"] = "Tell something about you..."
+                            userHashMap["facebook"] = getString(R.string.fb_placeholder)
+                            userHashMap["about"] = getString(R.string.tell_about_hint)
 
                             refUsers.updateChildren(userHashMap)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        Log.d("RegistrationActivity", "User created!")
                                         val intent = Intent(
                                             this@RegistrationActivity,
                                             MainActivity::class.java
@@ -93,11 +89,10 @@ class RegistrationActivity : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        Log.d("RegistrationActivity", "User is NOT created!")
                                         Toast
                                             .makeText(
                                                 this@RegistrationActivity,
-                                                "Error Message: " + task.exception?.message.toString(),
+                                                getString(R.string.error_message) + task.exception?.message.toString(),
                                                 Toast.LENGTH_SHORT
                                             )
                                             .show()
@@ -107,7 +102,7 @@ class RegistrationActivity : AppCompatActivity() {
                             Toast
                                 .makeText(
                                     this,
-                                    "Error Message: " + task.exception?.message.toString(),
+                                    getString(R.string.error_message) + task.exception?.message.toString(),
                                     Toast.LENGTH_SHORT
                                 )
                                 .show()

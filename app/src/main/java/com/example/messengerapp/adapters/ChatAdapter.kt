@@ -1,7 +1,6 @@
 package com.example.messengerapp.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,11 +35,12 @@ class ChatAdapter(
                 false
             )
         )
+
         fun bind(chatData: ChatData) {
             // Profile image displaying
             Picasso.get().load(imageUrl).into(binding.rightImageProfile)
             // image sending
-            if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
+            if (chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "") {
                 binding.apply {
                     rightMessageText.visibility = View.GONE
                     rightImageView.visibility = View.VISIBLE
@@ -51,17 +51,7 @@ class ChatAdapter(
                 binding.rightMessageText.text = chatData.getMessage()
             }
             // Set messages to sent or seen
-            if (position == chatList.size - 1) {
-
-                if (chatData.getIsSeen()) {
-                    Log.d("ChatAdapter", "chat.getIsSeen() : ${chatData.getIsSeen()}")
-                    binding.rightSeenText.text = context.getString(R.string.seen)
-                } else {
-                    binding.rightSeenText.text = context.getString(R.string.sent)
-                }
-            } else {
-                binding.rightSeenText.visibility = View.GONE
-            }
+            sentOrSeenMessage(chatData, position, binding)
         }
     }
 
@@ -75,11 +65,12 @@ class ChatAdapter(
                 false
             )
         )
+
         fun bind(chatData: ChatData) {
             // Profile image displaying
             Picasso.get().load(imageUrl).into(binding.leftImageProfile)
             // image sending
-            if (chatData.getMessage() == "Sent you an image" && chatData.getUrl() != "") {
+            if (chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "") {
                 binding.apply {
                     leftMessageText.visibility = View.GONE
                     leftImageView.visibility = View.VISIBLE
@@ -116,6 +107,26 @@ class ChatAdapter(
 
     override fun getItemCount(): Int =
         chatList.size
+
+    private fun sentOrSeenMessage(
+        chatData: ChatData,
+        position: Int,
+        binding: MessageItemRightBinding
+    ) {
+        when (position) {
+            chatList.size - 1 -> {
+
+                if (chatData.getIsSeen()) {
+                    binding.rightSeenText.text = context.getString(R.string.seen)
+                } else {
+                    binding.rightSeenText.text = context.getString(R.string.sent)
+                }
+            }
+            else -> {
+                binding.rightSeenText.visibility = View.GONE
+            }
+        }
+    }
 
 }
 

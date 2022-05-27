@@ -12,8 +12,4 @@ class ChatListData {
         return id
     }
 
-    fun setId(id: String?) {
-        this.id = id!!
-    }
-
 }
