@@ -5,13 +5,20 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.ChatAdapter
 import com.example.messengerapp.databinding.ActivityMessageBinding
+import com.example.messengerapp.fragments.ApiService
 import com.example.messengerapp.model.ChatData
+import com.example.messengerapp.model.NotificationData
+import com.example.messengerapp.model.NotificationSender
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.notifications.Client
+import com.example.messengerapp.notifications.MyResponse
+import com.example.messengerapp.notifications.Token
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -21,6 +28,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 private lateinit var binding: ActivityMessageBinding
 
@@ -34,6 +44,10 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var chatList: List<ChatData>
     private lateinit var reference: DatabaseReference
 
+    // For notifications
+    private var notify = false
+    var apiService: ApiService? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
@@ -46,6 +60,10 @@ class MessageActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+
+        // Notifications
+        apiService = Client.Client.getClient("https://fcm.googleapis.com/")!!.create(ApiService::class.java)
+
 
         intent = intent
         messageReceiver = intent.getStringExtra("chosen_user_id").toString()
@@ -79,6 +97,7 @@ class MessageActivity : AppCompatActivity() {
         })
 
         binding.sendButtonChat.setOnClickListener {
+            notify = true
             val message = binding.textMessage.text.toString()
             if (message != "") {
                 sendMessage(firebaseUser.uid, messageReceiver, message)
@@ -87,6 +106,7 @@ class MessageActivity : AppCompatActivity() {
         }
 
         binding.attachmentButtonChat.setOnClickListener {
+            notify = true
             val intent = Intent()
             intent.action = Intent.ACTION_GET_CONTENT
             intent.type = "image/*"
@@ -144,6 +164,25 @@ class MessageActivity : AppCompatActivity() {
                     })
                 }
             }
+
+        // Notifications
+        val userReference = FirebaseDatabase.getInstance().reference
+            .child("Users")
+            .child(firebaseUser.uid)
+
+        userReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(UserData::class.java)
+                if (notify) {
+                    sendNotification(messageReceiverId, user!!.getUsername(), message)
+                }
+                notify = false
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -182,6 +221,30 @@ class MessageActivity : AppCompatActivity() {
                     attachmentHashMap["url"] = url
 
                     reference.child("Chat").child(messageId!!).setValue(attachmentHashMap)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                progressDialog.dismiss()
+                                // Notifications
+                                val reference = FirebaseDatabase.getInstance().reference
+                                    .child("Users")
+                                    .child(firebaseUser.uid)
+
+                                reference.addValueEventListener(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val user = snapshot.getValue(UserData::class.java)
+                                        if (notify) {
+                                            sendNotification(messageReceiver, user!!.getUsername(), getString(R.string.sent_you_an_image))
+                                        }
+                                        notify = false
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+
+                                    }
+                                })
+                            }
+
+                        }
 
                     progressDialog.dismiss()
                 }
@@ -239,6 +302,49 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(p0: DatabaseError) {
+            }
+        })
+    }
+
+    private fun sendNotification(receiverId: String, username: String, message: String) {
+        val reference = FirebaseDatabase.getInstance().reference.child("Tokens")
+
+        val query = reference.orderByKey().equalTo(receiverId)
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (snap in snapshot.children) {
+                    val token: Token? = snap.getValue(Token::class.java)
+                    val notificationData = NotificationData(
+                        firebaseUser.uid,
+                        R.mipmap.ic_launcher,
+                        "$username : $message",
+                        getString(R.string.new_message),
+                        receiverId)
+
+                    val sender = NotificationSender(notificationData, token!!.getToken())
+                    apiService!!.sendNotification(sender)
+                        .enqueue(object : Callback<MyResponse> {
+                            override fun onResponse(
+                                call: Call<MyResponse>,
+                                response: Response<MyResponse>
+                            ) {
+                                if (response.code() == 200) {
+                                    if (response.body()!!.success !== 1) {
+                                        Toast.makeText(this@MessageActivity, "Failed", Toast.LENGTH_LONG)
+                                            .show()
+                                    }
+                                }
+                            }
+
+                            override fun onFailure(call: Call<MyResponse>, t: Throwable) {
+
+                            }
+                        })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
             }
         })
     }

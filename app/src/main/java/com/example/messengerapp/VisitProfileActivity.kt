@@ -61,6 +61,7 @@ class VisitProfileActivity : AppCompatActivity() {
             val intent = Intent(this@VisitProfileActivity, MessageActivity::class.java)
             intent.putExtra("chosen_user_id", user.getUid())
             startActivity(intent)
+            finish()
         }
     }
 }
