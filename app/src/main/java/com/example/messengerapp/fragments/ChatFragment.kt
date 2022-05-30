@@ -12,12 +12,14 @@ import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentChatBinding
 import com.example.messengerapp.model.ChatListData
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.notifications.Token
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class ChatFragment : Fragment() {
 
@@ -49,6 +51,7 @@ class ChatFragment : Fragment() {
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
         chatList = ArrayList()
+
         val reference =  FirebaseDatabase.getInstance().reference.child("ChatList").child(firebaseUser.uid)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -63,6 +66,8 @@ class ChatFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+
+        updateToken(FirebaseMessaging.getInstance().token.toString())
     }
 
     private fun getChatList(context: Context) {
@@ -86,6 +91,13 @@ class ChatFragment : Fragment() {
             override fun onCancelled(error: DatabaseError) {
             }
         })
+    }
+
+    // Notifications
+    private fun updateToken(token: String) {
+        val reference = FirebaseDatabase.getInstance().reference.child("Tokens")
+        val token1 = Token(token)
+        reference.child(firebaseUser.uid).setValue(token1)
     }
 
     override fun onDestroyView() {

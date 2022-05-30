@@ -9,11 +9,11 @@ class Token {
         this.token = token
     }
 
-    fun getToken(): String{
+    fun getToken(): String {
         return token
     }
 
-    fun setToken(token: String?){
+    fun setToken(token: String?) {
         this.token = token!!
     }
 }

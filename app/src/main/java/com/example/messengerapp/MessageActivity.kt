@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -151,7 +152,8 @@ class MessageActivity : AppCompatActivity() {
                                 chatListReference.child("id").setValue(messageReceiverId)
                             }
                             // Adding the receiver for the sender
-                            val chatListReceiverReference = FirebaseDatabase.getInstance()
+                            val chatListReceiverReference = FirebaseDatabase
+                                .getInstance()
                                 .reference
                                 .child("ChatList")
                                 .child(messageReceiverId)
@@ -166,9 +168,11 @@ class MessageActivity : AppCompatActivity() {
             }
 
         // Notifications
-        val userReference = FirebaseDatabase.getInstance().reference
+        val userReference = FirebaseDatabase
+            .getInstance()
+            .reference
             .child("Users")
-            .child(firebaseUser.uid)
+            .child(senderId)
 
         userReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -314,6 +318,7 @@ class MessageActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (snap in snapshot.children) {
                     val token: Token? = snap.getValue(Token::class.java)
+
                     val notificationData = NotificationData(
                         firebaseUser.uid,
                         R.mipmap.ic_launcher,
@@ -329,6 +334,7 @@ class MessageActivity : AppCompatActivity() {
                                 response: Response<MyResponse>
                             ) {
                                 if (response.code() == 200) {
+                                    Log.d("MessageActivity","${response.body()!!}")
                                     if (response.body()!!.success !== 1) {
                                         Toast.makeText(this@MessageActivity, "Failed", Toast.LENGTH_LONG)
                                             .show()
