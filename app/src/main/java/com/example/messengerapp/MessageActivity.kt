@@ -5,6 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,15 +15,18 @@ import com.example.messengerapp.databinding.ActivityMessageBinding
 import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
 import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 
+private const val TAG = "MessageActivity"
 private lateinit var binding: ActivityMessageBinding
 
 class MessageActivity : AppCompatActivity() {
@@ -98,6 +103,21 @@ class MessageActivity : AppCompatActivity() {
             )
         }
         seenMessage(messageReceiver)
+
+        // Notifications
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log token
+            Log.d(TAG, "TOKEN: $token")
+
+        })
     }
 
     // Store the message to Firebase
