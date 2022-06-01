@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,10 +15,12 @@ import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
 import com.example.messengerapp.notifications.FCMSend
 import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
@@ -37,6 +40,7 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var chatList: List<ChatData>
     private lateinit var reference: DatabaseReference
     private val fcmSend = FCMSend()
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,19 +108,36 @@ class MessageActivity : AppCompatActivity() {
         seenMessage(messageReceiver)
 
         // Notifications
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-//                return@OnCompleteListener
-//            }
-//
-//            // Get new FCM registration token
-//            val token = task.result
-//
-//            // Log token
-//            Log.d(TAG, "TOKEN: $token")
-//
-//        })
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            token = task.result
+
+            // Log token
+            Log.d(TAG, "TOKEN: $token")
+
+        })
+    }
+
+    private fun getToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            token = task.result
+
+            // Log token
+            Log.d(TAG, "TOKEN: $token")
+
+        })
     }
 
     // Store the message to Firebase
@@ -161,13 +182,14 @@ class MessageActivity : AppCompatActivity() {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
-                    val sender = getSenderUsername(senderId)
-                    fcmSend.pushNotification(
-                        this,
-                    "cQEbRPR9RSaDhoB_r9J2NP:APA91bEHMd_e1p_o5-YzcgRO00j96msOkRVS0YbDSqHcUE5i03b7WciDImPpF3uBHRXdVPvopoBvLQ7RFdKxzr_c-PVbW4KgAODnY5DLIKbguuBUCfPKAz7Y1heVtsXE_Coy2FKw2R-F",
-                        "New Message",
-                        sender
-                        )
+//                    getToken()
+//                    val sender = getSenderUsername(senderId)
+//                    fcmSend.pushNotification(
+//                        this,
+//                    token,
+//                        "New Message",
+//                        sender
+//                        )
                 }
             }
     }
