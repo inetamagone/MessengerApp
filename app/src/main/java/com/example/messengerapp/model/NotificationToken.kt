@@ -1,7 +1,6 @@
 package com.example.messengerapp.model
 
 class NotificationToken {
-
     private var token: String = ""
 
     constructor()
@@ -14,7 +13,7 @@ class NotificationToken {
         return token
     }
 
-    fun setToken(token: String?){
+    fun setToken(token: String?) {
         this.token = token!!
     }
 }

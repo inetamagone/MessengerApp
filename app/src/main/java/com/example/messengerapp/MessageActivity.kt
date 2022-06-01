@@ -13,14 +13,12 @@ import com.example.messengerapp.adapters.ChatAdapter
 import com.example.messengerapp.databinding.ActivityMessageBinding
 import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
-import com.example.messengerapp.notifications.FCMSend
+import com.example.messengerapp.utils.FcmUtils
 import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
@@ -33,14 +31,12 @@ class MessageActivity : AppCompatActivity() {
 
     private var messageReceiver: String = ""
     lateinit var firebaseUser: FirebaseUser
-    lateinit var senderUsername: String
+    lateinit var fcmUtils: FcmUtils
 
     private lateinit var adapter: ChatAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var chatList: List<ChatData>
     private lateinit var reference: DatabaseReference
-    private val fcmSend = FCMSend()
-    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +50,7 @@ class MessageActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
+        fcmUtils = FcmUtils()
 
         intent = intent
         messageReceiver = intent.getStringExtra("chosen_user_id").toString()
@@ -85,12 +82,22 @@ class MessageActivity : AppCompatActivity() {
 
             }
         })
+        FcmUtils().registerToken()
 
         binding.sendButtonChat.setOnClickListener {
             val message = binding.textMessage.text.toString()
             if (message != "") {
                 sendMessage(firebaseUser.uid, messageReceiver, message)
             }
+
+            val notificationTitle = "New Message"
+
+            FcmUtils().sendNotification(
+                this@MessageActivity,
+                messageReceiver,
+                notificationTitle, message
+            )
+
             binding.textMessage.setText("")
         }
 
@@ -106,39 +113,7 @@ class MessageActivity : AppCompatActivity() {
             )
         }
         seenMessage(messageReceiver)
-
-        // Notifications
-
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-//                return@OnCompleteListener
-//            }
-//
-//            // Get new FCM registration token
-//            token = task.result
-//
-//            // Log token
-//            Log.d(TAG, "TOKEN: $token")
-//
-//        })
     }
-
-//    private fun getToken() {
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-//            if (!task.isSuccessful) {
-//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-//                return@OnCompleteListener
-//            }
-//
-//            // Get new FCM registration token
-//            token = task.result
-//
-//            // Log token
-//            Log.d(TAG, "TOKEN: $token")
-//
-//        })
-//    }
 
     // Store the message to Firebase
     private fun sendMessage(senderId: String, messageReceiverId: String, message: String) {
@@ -182,35 +157,9 @@ class MessageActivity : AppCompatActivity() {
                         override fun onCancelled(error: DatabaseError) {
                         }
                     })
-//                    getToken()
-//                    val sender = getSenderUsername(senderId)
-//                    fcmSend.pushNotification(
-//                        this,
-//                    token,
-//                        "New Message",
-//                        sender
-//                        )
                 }
             }
     }
-
-//    private fun getSenderUsername(senderId: String): String {
-//        reference = FirebaseDatabase.getInstance().reference
-//            .child("Users")
-//            .child(senderId)
-//        reference.addValueEventListener(object : ValueEventListener {
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val user: UserData? = snapshot.getValue(UserData::class.java)
-//                senderUsername = user!!.getUsername()
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//
-//            }
-//        })
-//          return senderUsername
-//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
