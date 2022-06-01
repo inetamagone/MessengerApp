@@ -109,36 +109,36 @@ class MessageActivity : AppCompatActivity() {
 
         // Notifications
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            token = task.result
-
-            // Log token
-            Log.d(TAG, "TOKEN: $token")
-
-        })
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            token = task.result
+//
+//            // Log token
+//            Log.d(TAG, "TOKEN: $token")
+//
+//        })
     }
 
-    private fun getToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            token = task.result
-
-            // Log token
-            Log.d(TAG, "TOKEN: $token")
-
-        })
-    }
+//    private fun getToken() {
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            token = task.result
+//
+//            // Log token
+//            Log.d(TAG, "TOKEN: $token")
+//
+//        })
+//    }
 
     // Store the message to Firebase
     private fun sendMessage(senderId: String, messageReceiverId: String, message: String) {
@@ -194,23 +194,23 @@ class MessageActivity : AppCompatActivity() {
             }
     }
 
-    private fun getSenderUsername(senderId: String): String {
-        reference = FirebaseDatabase.getInstance().reference
-            .child("Users")
-            .child(senderId)
-        reference.addValueEventListener(object : ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user: UserData? = snapshot.getValue(UserData::class.java)
-                senderUsername = user!!.getUsername()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-          return senderUsername
-    }
+//    private fun getSenderUsername(senderId: String): String {
+//        reference = FirebaseDatabase.getInstance().reference
+//            .child("Users")
+//            .child(senderId)
+//        reference.addValueEventListener(object : ValueEventListener {
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val user: UserData? = snapshot.getValue(UserData::class.java)
+//                senderUsername = user!!.getUsername()
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//
+//            }
+//        })
+//          return senderUsername
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
