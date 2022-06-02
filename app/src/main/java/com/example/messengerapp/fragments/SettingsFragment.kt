@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.FragmentSettingsBinding
 import com.example.messengerapp.model.UserData
@@ -124,6 +125,7 @@ class SettingsFragment : Fragment() {
 
             dialogBuilder
                 .show()
+
         } else {
             val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
             dialogBuilder

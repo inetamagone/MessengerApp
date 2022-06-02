@@ -7,7 +7,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 
 object ApiConfig {
-    var BASE_URL = "https://fcm.googleapis.com/fcm/send/"
+
+    private var BASE_URL = "https://fcm.googleapis.com"
 
     fun getApiService(context: Context): ApiService {
         val loggingInterceptor = ChuckerInterceptor.Builder(context)

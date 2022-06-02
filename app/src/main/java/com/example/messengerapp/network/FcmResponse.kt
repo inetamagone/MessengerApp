@@ -1,5 +1,6 @@
 package com.example.messengerapp.network
 
-class FcmResponse(
+data class FcmResponse(
     var success: Int? = null
 )
+

@@ -49,7 +49,8 @@ class ChatFragment : Fragment() {
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
         chatList = ArrayList()
-        val reference =  FirebaseDatabase.getInstance().reference.child("ChatList").child(firebaseUser.uid)
+        val reference =
+            FirebaseDatabase.getInstance().reference.child("ChatList").child(firebaseUser.uid)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 (chatList as ArrayList).clear()
@@ -60,6 +61,7 @@ class ChatFragment : Fragment() {
                 }
                 getChatList(requireContext())
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })
@@ -83,6 +85,7 @@ class ChatFragment : Fragment() {
                 adapter = UserAdapter(context, (userList as ArrayList<UserData>), true)
                 recyclerView.adapter = adapter
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })

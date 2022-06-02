@@ -4,14 +4,18 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.messengerapp.MessageActivity
 import com.example.messengerapp.R
-import com.example.messengerapp.utils.FcmUtils
+import com.example.messengerapp.utils.sendRegistrationToServer
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
@@ -31,15 +35,25 @@ class PushNotificationService : FirebaseMessagingService() {
         val channelId = "com.example.messengerapp.notifications"
         val channelName = "Message Notification"
 
-        val title = message.notification?.title
-        val text = message.notification?.body
-        val clickAction = message.notification?.clickAction
+        val user = message.data["senderId"]
+        val title = message.data["title"]
+        val body = message.data["body"]
 
-        val intent = Intent(clickAction)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val j = user!!.replace("[\\D]".toRegex(), "").toInt()
+//        val title = message.notification?.title
+//        val text = message.notification?.body
+
+        val intent = Intent(this, MessageActivity::class.java)
+
+        val bundle = Bundle()
+        bundle.putString("userid", user)
+        intent.putExtras(bundle)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+//        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         @SuppressLint("UnspecifiedImmutableFlag")
             val pendingIntent = PendingIntent
-            .getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+            .getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
         getSystemService(NotificationManager::class.java)
@@ -49,7 +63,7 @@ class PushNotificationService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
-            .setContentText(text)
+            .setContentText(body)
             .setColor(ContextCompat.getColor(this, android.R.color.transparent))
             .setAutoCancel(true)
 
@@ -76,7 +90,7 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        FcmUtils().sendRegistrationToServer(token)
+        sendRegistrationToServer(token)
         Log.d(TAG, "Refreshed token: $token")
     }
 
