@@ -92,14 +92,6 @@ class MessageActivity : AppCompatActivity() {
                 sendMessage(firebaseUser.uid, messageReceiver, message)
             }
 
-//            val notificationTitle = "New Message"
-//
-//            FcmUtils().sendNotification(
-//                this@MessageActivity,
-//                messageReceiver,
-//                notificationTitle, message
-//            )
-
             binding.textMessage.setText("")
         }
 

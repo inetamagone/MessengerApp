@@ -52,7 +52,7 @@ fun sendNotification(context: Context, senderId: String, body: String, receiverI
                     notificationTitle,
                     body,
                     "high",
-                    "to_chat"
+                    "TO_MESSAGES"
                 )
                 val message = Message(notification, token?.getToken().orEmpty())
 
