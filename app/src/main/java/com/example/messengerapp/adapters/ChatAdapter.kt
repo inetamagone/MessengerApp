@@ -1,16 +1,22 @@
 package com.example.messengerapp.adapters
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.messengerapp.FullImageActivity
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.MessageItemLeftBinding
 import com.example.messengerapp.databinding.MessageItemRightBinding
 import com.example.messengerapp.model.ChatData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 
 class ChatAdapter(
@@ -45,10 +51,53 @@ class ChatAdapter(
                     rightMessageText.visibility = View.GONE
                     rightImageView.visibility = View.VISIBLE
                     Picasso.get().load(chatData.getUrl()).into(binding.rightImageView)
+                    rightImageView.setOnClickListener {
+                        val options = arrayOf<CharSequence>(
+                            context.getString(R.string.open_image),
+                            context.getString(R.string.delete_image),
+                            context.getString(R.string.cancel)
+                        )
+                        val alertDialog = AlertDialog.Builder(binding.root.context)
+                        alertDialog.apply {
+                            setTitle(context.getString(R.string.actions_title))
+                            setItems(options) { _, which ->
+                                when (which) {
+                                    0 -> {
+                                        val intent = Intent(context, FullImageActivity::class.java)
+                                        intent.putExtra("url", chatData.getUrl())
+                                        context.startActivity(intent)
+                                    }
+                                    1 -> {
+                                        deleteMessage(position)
+                                    }
+                                }
+                            }
+                            alertDialog.show()
+                        }
+                    }
                 }
                 // Text messages
             } else {
-                binding.rightMessageText.text = chatData.getMessage()
+                binding.apply {
+                    rightMessageText.text = chatData.getMessage()
+
+                    rightMessageText.setOnClickListener {
+                        val options = arrayOf<CharSequence>(
+                            context.getString(R.string.delete_message),
+                            context.getString(R.string.cancel)
+                        )
+                        val alertDialog = AlertDialog.Builder(binding.root.context)
+                        alertDialog.apply {
+                            setTitle(context.getString(R.string.actions_title))
+                            setItems(options) { _, which ->
+                                if (which == 0) {
+                                    deleteMessage(position)
+                                }
+                            }
+                            alertDialog.show()
+                        }
+                    }
+                }
             }
             // Set messages to sent or seen
             sentOrSeenMessage(chatData, position, binding)
@@ -75,6 +124,25 @@ class ChatAdapter(
                     leftMessageText.visibility = View.GONE
                     leftImageView.visibility = View.VISIBLE
                     Picasso.get().load(chatData.getUrl()).into(binding.leftImageView)
+
+                    leftImageView.setOnClickListener {
+                        val options = arrayOf<CharSequence>(
+                            context.getString(R.string.open_image),
+                            context.getString(R.string.cancel)
+                        )
+                        val alertDialog = AlertDialog.Builder(binding.root.context)
+                        alertDialog.apply {
+                            setTitle(context.getString(R.string.actions_title))
+                            setItems(options) { _, which ->
+                                if (which == 0) {
+                                    val intent = Intent(context, FullImageActivity::class.java)
+                                    intent.putExtra("url", chatData.getUrl())
+                                    context.startActivity(intent)
+                                }
+                            }
+                            alertDialog.show()
+                        }
+                    }
                 }
                 // Text messages
             } else {
@@ -85,8 +153,8 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is RightViewHolder -> holder.bind(chatList[position])
-            is LeftViewHolder -> holder.bind(chatList[position])
+            is ChatAdapter.RightViewHolder -> holder.bind(chatList[position])
+            is ChatAdapter.LeftViewHolder -> holder.bind(chatList[position])
         }
     }
 
@@ -128,5 +196,24 @@ class ChatAdapter(
         }
     }
 
+    private fun deleteMessage(position: Int) {
+        FirebaseDatabase.getInstance().reference.child("Chat")
+            .child(chatList[position].getMessageId())
+            .removeValue()
+            .addOnCompleteListener { task ->
+                when {
+                    task.isSuccessful -> {
+                        Toast
+                            .makeText(context, context.getString(R.string.deleted), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    else -> {
+                        Toast
+                            .makeText(context, context.getString(R.string.not_deleted), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+    }
 }
 

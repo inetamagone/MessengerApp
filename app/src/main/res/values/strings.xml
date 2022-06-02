@@ -42,7 +42,6 @@
     <string name="image_loading">Image is loading..</string>
     <string name="write_something">Please write something...</string>
     <string name="like_ride_bicycle">e.g. I like to read and ride a bicycle...</string>
-    <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="title_about_info">Your About Info</string>
     <string name="hint_username_example">e.g. matthieu2</string>
@@ -63,4 +62,10 @@
     <string name="fb_placeholder">https://m.facebook.com</string>
     <string name="sent_you_an_image">Sent you an image</string>
     <string name="sent_image">Sent an image</string>
+    <string name="open_image">Open image</string>
+    <string name="deleted">Deleted</string>
+    <string name="delete_image">Delete image</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_message">Delete Message</string>
+    <string name="not_deleted">Failed to delete</string>
 </resources>
