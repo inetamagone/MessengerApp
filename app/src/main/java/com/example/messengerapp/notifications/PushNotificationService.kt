@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.messengerapp.R
+import com.example.messengerapp.utils.registerToken
 import com.example.messengerapp.utils.sendRegistrationToServer
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -23,10 +24,20 @@ class PushNotificationService : FirebaseMessagingService() {
 
     // TODO: Don't receive a notification, check the topic subscription
 
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+        //registerToken()
+        Log.d(TAG, "onNewToken called")
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        pushNotification(message)
+        Log.d(TAG, "onMessageReceived called")
+        if (message.data.isNotEmpty()) {
+            pushNotification(message)
+        }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -36,9 +47,12 @@ class PushNotificationService : FirebaseMessagingService() {
         val channelId = "com.example.messengerapp.notifications"
         val channelName = "Message Notification"
 
-        val title = message.notification?.title
-        val body = message.notification?.body
-        val clickAction = message.notification?.clickAction
+        val title = message.data["title"]
+        val body = message.data["body"]
+        val clickAction = message.data["click_action"]
+//        val title = message.notification?.title
+//        val body = message.notification?.body
+//        val clickAction = message.notification?.clickAction
 
         val intent = Intent(clickAction)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -72,10 +86,5 @@ class PushNotificationService : FirebaseMessagingService() {
         notificationManager.notify(notificationId, notification)
     }
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        sendRegistrationToServer(token)
-        Log.d(TAG, "Refreshed token: $token")
-    }
 
 }

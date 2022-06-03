@@ -27,6 +27,7 @@ fun registerToken() {
         if (task.isSuccessful) {
             val token = task.result
             sendRegistrationToServer(token)
+            Log.w(TAG, "sendRegistrationToServer(token) CALLED")
         } else {
             Log.w(TAG, "Fetching FCM registration token failed", task.exception)
         }
@@ -55,8 +56,9 @@ fun sendNotification(context: Context, senderId: String, body: String, receiverI
                     "TO_MESSAGES"
                 )
                 val message = Message(notification, token?.getToken().orEmpty())
-
+                Log.d(TAG, "TOKEN: ${token?.getToken().orEmpty()}")
                 val client = ApiConfig.getApiService(context).sendNotification(message)
+                Log.d(TAG, "message: $message")
                 client?.enqueue(object : Callback<FcmResponse?> {
                     override fun onResponse(
                         call: Call<FcmResponse?>,
