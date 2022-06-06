@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentChatBinding
 import com.example.messengerapp.model.ChatListData
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.viewModels.MessengerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -23,6 +25,7 @@ class ChatFragment : Fragment() {
 
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModel: MessengerViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
@@ -43,8 +46,7 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = binding.recyclerViewChatList
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        viewModel = ViewModelProvider(this)[MessengerViewModel::class.java]
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
@@ -59,31 +61,15 @@ class ChatFragment : Fragment() {
                     val list = snap.getValue(ChatListData::class.java)
                     (chatList as ArrayList).add(list!!)
                 }
-                getChatList(requireContext())
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
-    }
-
-    private fun getChatList(context: Context) {
-        userList = ArrayList()
-        val reference = FirebaseDatabase.getInstance().reference.child("Users")
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                (userList as ArrayList).clear()
-
-                for (snap in snapshot.children) {
-                    val user = snap.getValue(UserData::class.java)
-                    for (message in chatList) {
-                        if (user!!.getUid() == message.getId()) {
-                            (userList as ArrayList).add(user)
+                viewModel.getUserList(chatList)
+                    .observe(viewLifecycleOwner) { list ->
+                        list.let { listOfUserData ->
+                            adapter = UserAdapter(requireContext(), listOfUserData, true)
+                            recyclerView = binding.recyclerViewChatList
+                            recyclerView.adapter = adapter
+                            recyclerView.layoutManager = LinearLayoutManager(context)
                         }
                     }
-                }
-                adapter = UserAdapter(context, (userList as ArrayList<UserData>), true)
-                recyclerView.adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {
