@@ -40,6 +40,8 @@ class SettingsFragment : Fragment() {
     private var isProfileImage: Boolean = false
     private var isEditingAbout: Boolean = false
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

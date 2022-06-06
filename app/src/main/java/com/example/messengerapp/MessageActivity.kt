@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +24,6 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 
-private const val TAG = "MessageActivity"
 private lateinit var binding: ActivityMessageBinding
 
 class MessageActivity : AppCompatActivity() {
@@ -166,7 +164,7 @@ class MessageActivity : AppCompatActivity() {
                         this@MessageActivity,
                         senderId,
                         "${user!!.getUsername()}: $message",
-                        messageReceiverId)
+                                messageReceiverId)
                 }
                 notify = false
             }

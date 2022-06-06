@@ -6,6 +6,7 @@ data class Message(
 )
 
 data class Notification(
+    val sender_id: String,
     val title: String,
     val body: String,
     val priority: String,

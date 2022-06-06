@@ -11,24 +11,28 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.messengerapp.MessageActivity
 import com.example.messengerapp.R
 import com.example.messengerapp.utils.registerToken
-import com.example.messengerapp.utils.sendRegistrationToServer
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
 
 private const val TAG = "PushNotificationService"
 
-class PushNotificationService : FirebaseMessagingService() {
+// Class that runs in the background, detecting when a new notification is received
 
-    // TODO: Don't receive a notification, check the topic subscription
+class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        //registerToken()
+        registerToken()
         Log.d(TAG, "onNewToken called")
     }
+
+    /* Two different cases when onNewToken is called:
+     1. When a new token is generated on initial startup
+     2. When an existing token is changed */
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(message: RemoteMessage) {
@@ -37,7 +41,6 @@ class PushNotificationService : FirebaseMessagingService() {
         if (message.data.isNotEmpty()) {
             pushNotification(message)
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -49,13 +52,11 @@ class PushNotificationService : FirebaseMessagingService() {
 
         val title = message.data["title"]
         val body = message.data["body"]
-        val clickAction = message.data["click_action"]
-//        val title = message.notification?.title
-//        val body = message.notification?.body
-//        val clickAction = message.notification?.clickAction
 
-        val intent = Intent(clickAction)
+        val intent = Intent(this, MessageActivity::class.java)
+
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
         @SuppressLint("UnspecifiedImmutableFlag")
         val pendingIntent = PendingIntent
             .getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
@@ -85,6 +86,5 @@ class PushNotificationService : FirebaseMessagingService() {
         val notificationId = Random().nextInt()
         notificationManager.notify(notificationId, notification)
     }
-
 
 }

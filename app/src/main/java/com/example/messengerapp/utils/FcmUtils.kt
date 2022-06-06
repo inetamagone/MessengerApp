@@ -49,7 +49,7 @@ fun sendNotification(context: Context, senderId: String, body: String, receiverI
             dataSnapshot.children.forEach { snapshot ->
                 val token = snapshot.getValue(NotificationToken::class.java)
                 val notificationTitle = context.getString(R.string.new_message)
-                val notification = Notification(
+                val notification = Notification(senderId,
                     notificationTitle,
                     body,
                     "high",
@@ -65,7 +65,6 @@ fun sendNotification(context: Context, senderId: String, body: String, receiverI
                         response: Response<FcmResponse?>,
                     ) {
                         if (response.code() == 200 && response.body() != null) {
-                            Log.d(TAG, "Response code == 200 && response.body() != null")
                             Log.d(TAG, "Response.body(): ${response.body().toString()}")
 
                             if (response.body()!!.success == 1) {
