@@ -28,6 +28,7 @@ class SearchFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private var adapter: UserAdapter? = null
 
+    private var firebaseUserID = ""
     private var userList: List<UserData> = ArrayList()
     private lateinit var searchField: EditText
 
@@ -64,7 +65,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun getAllUsers(context: Context) {
-        val firebaseUserID = FirebaseAuth.getInstance().currentUser!!.uid
+        firebaseUserID = FirebaseAuth.getInstance().currentUser!!.uid
         val refUsers = FirebaseDatabase.getInstance().reference.child("Users")
 
         refUsers.addValueEventListener(object : ValueEventListener {
@@ -90,7 +91,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchUsers(queryString: String) {
-        val firebaseUserID = FirebaseAuth.getInstance().currentUser!!.uid
+        firebaseUserID = FirebaseAuth.getInstance().currentUser!!.uid
 
         val userQuery = FirebaseDatabase.getInstance().reference
             .child("Users").orderByChild("search")

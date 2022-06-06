@@ -1,16 +1,21 @@
 package com.example.messengerapp.adapters
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.messengerapp.FullImageActivity
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.MessageItemLeftBinding
 import com.example.messengerapp.databinding.MessageItemRightBinding
 import com.example.messengerapp.model.ChatData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 
 class ChatAdapter(
@@ -40,18 +45,64 @@ class ChatAdapter(
             // Profile image displaying
             Picasso.get().load(imageUrl).into(binding.rightImageProfile)
             // image sending
-            if (chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "") {
-                binding.apply {
-                    rightMessageText.visibility = View.GONE
-                    rightImageView.visibility = View.VISIBLE
-                    Picasso.get().load(chatData.getUrl()).into(binding.rightImageView)
+            when {
+                chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "" -> {
+                    binding.apply {
+                        rightMessageText.visibility = View.GONE
+                        rightImageView.visibility = View.VISIBLE
+                        Picasso.get().load(chatData.getUrl()).into(binding.rightImageView)
+                        rightImageView.setOnClickListener {
+                            val options = arrayOf<CharSequence>(
+                                context.getString(R.string.open_image),
+                                context.getString(R.string.delete_image),
+                                context.getString(R.string.cancel)
+                            )
+                            val dialogBuilder = AlertDialog.Builder(binding.root.context)
+                            dialogBuilder.apply {
+                                setTitle(context.getString(R.string.actions_title))
+                                setItems(options) { _, choice ->
+                                    when (choice) {
+                                        0 -> {
+                                            val intent = Intent(context, FullImageActivity::class.java)
+                                            intent.putExtra("url", chatData.getUrl())
+                                            context.startActivity(intent)
+                                        }
+                                        1 -> {
+                                            deleteMessage(layoutPosition)
+                                        }
+                                    }
+                                }
+                                dialogBuilder.show()
+                            }
+                        }
+                    }
+                    // Text messages
                 }
-                // Text messages
-            } else {
-                binding.rightMessageText.text = chatData.getMessage()
+                else -> {
+                    binding.apply {
+                        rightMessageText.text = chatData.getMessage()
+
+                        rightMessageText.setOnClickListener {
+                            val options = arrayOf<CharSequence>(
+                                context.getString(R.string.delete_message),
+                                context.getString(R.string.cancel)
+                            )
+                            val dialogBuilder = AlertDialog.Builder(binding.root.context)
+                            dialogBuilder.apply {
+                                setTitle(context.getString(R.string.actions_title))
+                                setItems(options) { _, choice ->
+                                    if (choice == 0) {
+                                        deleteMessage(layoutPosition)
+                                    }
+                                }
+                                dialogBuilder.show()
+                            }
+                        }
+                    }
+                }
             }
             // Set messages to sent or seen
-            sentOrSeenMessage(chatData, position, binding)
+            sentOrSeenMessage(chatData, layoutPosition, binding)
         }
     }
 
@@ -70,31 +121,56 @@ class ChatAdapter(
             // Profile image displaying
             Picasso.get().load(imageUrl).into(binding.leftImageProfile)
             // image sending
-            if (chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "") {
-                binding.apply {
-                    leftMessageText.visibility = View.GONE
-                    leftImageView.visibility = View.VISIBLE
-                    Picasso.get().load(chatData.getUrl()).into(binding.leftImageView)
+            when {
+                chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "" -> {
+                    binding.apply {
+                        leftMessageText.visibility = View.GONE
+                        leftImageView.visibility = View.VISIBLE
+                        Picasso.get().load(chatData.getUrl()).into(binding.leftImageView)
+
+                        leftImageView.setOnClickListener {
+                            val options = arrayOf<CharSequence>(
+                                context.getString(R.string.open_image),
+                                context.getString(R.string.cancel)
+                            )
+                            val dialogBuilder = AlertDialog.Builder(binding.root.context)
+                            dialogBuilder.apply {
+                                setTitle(context.getString(R.string.actions_title))
+                                setItems(options) { _, choice ->
+                                    if (choice == 0) {
+                                        val intent = Intent(context, FullImageActivity::class.java)
+                                        intent.putExtra("url", chatData.getUrl())
+                                        context.startActivity(intent)
+                                    }
+                                }
+                                dialogBuilder.show()
+                            }
+                        }
+                    }
+                    // Text messages
                 }
-                // Text messages
-            } else {
-                binding.leftMessageText.text = chatData.getMessage()
+                else -> {
+                    binding.leftMessageText.text = chatData.getMessage()
+                }
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is RightViewHolder -> holder.bind(chatList[position])
-            is LeftViewHolder -> holder.bind(chatList[position])
+            is ChatAdapter.RightViewHolder -> holder.bind(chatList[position])
+            is ChatAdapter.LeftViewHolder -> holder.bind(chatList[position])
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (chatList[position].getSender() == firebaseUser.uid) {
-            0 // right side
-        } else {
-            1 // left side
+        return when (firebaseUser.uid) {
+            chatList[position].getSender() -> {
+                0 // right side
+            }
+            else -> {
+                1 // left side
+            }
         }
     }
 
@@ -110,16 +186,19 @@ class ChatAdapter(
 
     private fun sentOrSeenMessage(
         chatData: ChatData,
-        position: Int,
+        layoutPosition: Int,
         binding: MessageItemRightBinding
     ) {
-        when (position) {
+        when (layoutPosition) {
             chatList.size - 1 -> {
 
-                if (chatData.getIsSeen()) {
-                    binding.rightSeenText.text = context.getString(R.string.seen)
-                } else {
-                    binding.rightSeenText.text = context.getString(R.string.sent)
+                when {
+                    chatData.getIsSeen() -> {
+                        binding.rightSeenText.text = context.getString(R.string.seen)
+                    }
+                    else -> {
+                        binding.rightSeenText.text = context.getString(R.string.sent)
+                    }
                 }
             }
             else -> {
@@ -128,5 +207,32 @@ class ChatAdapter(
         }
     }
 
+    private fun deleteMessage(layoutPosition: Int) {
+        FirebaseDatabase.getInstance().reference.child("Chat")
+            .child(chatList[layoutPosition].getMessageId())
+            .removeValue()
+            .addOnCompleteListener { task ->
+                when {
+                    task.isSuccessful -> {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.deleted),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    }
+                    else -> {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.not_deleted),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    }
+                }
+            }
+    }
 }
 

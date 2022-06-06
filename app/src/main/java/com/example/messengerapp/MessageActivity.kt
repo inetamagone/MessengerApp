@@ -12,6 +12,8 @@ import com.example.messengerapp.adapters.ChatAdapter
 import com.example.messengerapp.databinding.ActivityMessageBinding
 import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.utils.registerToken
+import com.example.messengerapp.utils.sendNotification
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +35,8 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var chatList: List<ChatData>
     private lateinit var reference: DatabaseReference
+
+    var notify = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,12 +81,15 @@ class MessageActivity : AppCompatActivity() {
 
             }
         })
+        registerToken()
 
         binding.sendButtonChat.setOnClickListener {
+            notify = true
             val message = binding.textMessage.text.toString()
             if (message != "") {
                 sendMessage(firebaseUser.uid, messageReceiver, message)
             }
+
             binding.textMessage.setText("")
         }
 
@@ -144,6 +151,28 @@ class MessageActivity : AppCompatActivity() {
                     })
                 }
             }
+
+        //implement the push notifications using fcm
+        val usersReference = FirebaseDatabase.getInstance().reference
+            .child("Users").child(firebaseUser.uid)
+
+        usersReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(UserData::class.java)
+                if (notify) {
+                    sendNotification(
+                        this@MessageActivity,
+                        senderId,
+                        "${user!!.getUsername()}: $message",
+                                messageReceiverId)
+                }
+                notify = false
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
