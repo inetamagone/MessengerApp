@@ -1,6 +1,5 @@
 package com.example.messengerapp.fragments
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentChatBinding
 import com.example.messengerapp.model.ChatListData
-import com.example.messengerapp.model.UserData
 import com.example.messengerapp.viewModels.MessengerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -30,7 +28,6 @@ class ChatFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
 
-    private lateinit var userList: List<UserData>
     private lateinit var chatList: List<ChatListData>
     private lateinit var firebaseUser: FirebaseUser
 
@@ -50,6 +47,7 @@ class ChatFragment : Fragment() {
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
+        viewModel.isChatFragment = true
         chatList = ArrayList()
         val reference =
             FirebaseDatabase.getInstance().reference.child("ChatList").child(firebaseUser.uid)
@@ -61,6 +59,7 @@ class ChatFragment : Fragment() {
                     val list = snap.getValue(ChatListData::class.java)
                     (chatList as ArrayList).add(list!!)
                 }
+
                 viewModel.getUserList(chatList)
                     .observe(viewLifecycleOwner) { list ->
                         list.let { listOfUserData ->
