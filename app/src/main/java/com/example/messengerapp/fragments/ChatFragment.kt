@@ -10,25 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentChatBinding
-import com.example.messengerapp.model.ChatListData
 import com.example.messengerapp.viewModels.MessengerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class ChatFragment : Fragment() {
 
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var viewModel: MessengerViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
 
-    private lateinit var chatList: List<ChatListData>
     private lateinit var firebaseUser: FirebaseUser
 
     override fun onCreateView(
@@ -48,32 +43,20 @@ class ChatFragment : Fragment() {
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
         viewModel.isChatFragment = true
-        chatList = ArrayList()
-        val reference =
-            FirebaseDatabase.getInstance().reference.child("ChatList").child(firebaseUser.uid)
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                (chatList as ArrayList).clear()
 
-                for (snap in snapshot.children) {
-                    val list = snap.getValue(ChatListData::class.java)
-                    (chatList as ArrayList).add(list!!)
-                }
+        // Get chat list and then user info to display from ViewModel Live data
+        viewModel.getChats().observe(viewLifecycleOwner) { listOfChats ->
 
-                viewModel.getUserList(chatList)
-                    .observe(viewLifecycleOwner) { list ->
-                        list.let { listOfUserData ->
-                            adapter = UserAdapter(requireContext(), listOfUserData, true)
-                            recyclerView = binding.recyclerViewChatList
-                            recyclerView.adapter = adapter
-                            recyclerView.layoutManager = LinearLayoutManager(context)
-                        }
+            viewModel.getUserData(listOfChats)
+                .observe(viewLifecycleOwner) { list ->
+                    list.let { listOfUserData ->
+                        adapter = UserAdapter(requireContext(), listOfUserData, true)
+                        recyclerView = binding.recyclerViewChatList
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(context)
                     }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
+                }
+        }
     }
 
     override fun onDestroyView() {
