@@ -21,7 +21,7 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 
-class MessengerViewModel : ViewModel() {
+class FragmentViewModel : ViewModel() {
 
     var isChatFragment: Boolean = true
     private val userList = MutableLiveData<List<UserData>>()
@@ -125,7 +125,6 @@ class MessengerViewModel : ViewModel() {
     }
 
     // Settings Fragment
-
     fun setViews(userReference: DatabaseReference, binding: FragmentSettingsBinding) {
         userReference.addValueEventListener(object : ValueEventListener {
 

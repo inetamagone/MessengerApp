@@ -3,9 +3,9 @@ package com.example.messengerapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.example.messengerapp.databinding.ActivityLoginBinding
+import com.example.messengerapp.utils.showToast
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         }
         auth = FirebaseAuth.getInstance()
         binding.buttonLogin.setOnClickListener {
-            loginUser()
+           loginUser()
         }
     }
 
@@ -41,14 +41,11 @@ class LoginActivity : AppCompatActivity() {
 
         when {
             email == "" -> {
-                Toast
-                    .makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this, getString(R.string.enter_email))
+
             }
             password == "" -> {
-                Toast
-                    .makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this, getString(R.string.enter_password))
             }
             else -> {
                 auth.signInWithEmailAndPassword(email, password)
@@ -61,16 +58,14 @@ class LoginActivity : AppCompatActivity() {
                             finish()
 
                         } else {
-                            Toast
-                                .makeText(
-                                    this,
-                                    getString(R.string.error_message) + task.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
+                            showToast(
+                                this,
+                                getString(R.string.error_message) + task.exception?.message.toString()
+                            )
                         }
                     }
             }
         }
     }
+
 }

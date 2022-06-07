@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.ChatAdapter
@@ -14,6 +16,7 @@ import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
 import com.example.messengerapp.utils.registerToken
 import com.example.messengerapp.utils.sendNotification
+import com.example.messengerapp.viewModels.ActivityViewModel
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +25,9 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
-import com.squareup.picasso.Picasso
 
 private lateinit var binding: ActivityMessageBinding
+private lateinit var viewModel: ActivityViewModel
 
 class MessageActivity : AppCompatActivity() {
 
@@ -33,7 +36,6 @@ class MessageActivity : AppCompatActivity() {
 
     private lateinit var adapter: ChatAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var chatList: List<ChatData>
     private lateinit var reference: DatabaseReference
 
     var notify = false
@@ -42,6 +44,8 @@ class MessageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
 
         val toolbar: Toolbar = binding.toolbarChat
         setSupportActionBar(toolbar)
@@ -60,27 +64,33 @@ class MessageActivity : AppCompatActivity() {
         linearLayoutManager.stackFromEnd = true
         recyclerView.layoutManager = linearLayoutManager
 
-        // Get the username and picture of the message receiver
+        // Get the message receiver
         reference = FirebaseDatabase.getInstance().reference
             .child("Users")
             .child(messageReceiver)
-        reference.addValueEventListener(object : ValueEventListener {
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val user: UserData? = snapshot.getValue(UserData::class.java)
-                binding.usernameChat.text = user!!.getUsername()
-                Picasso
-                    .get()
-                    .load(user.getProfile())
-                    .into(binding.profileImageChat)
+        /* Create the activity user observer and chat observer
+         Pass the methods to the ViewModel and then to the adapter */
 
-                getMessages(firebaseUser.uid, messageReceiver, user.getProfile())
+        val userObserver = Observer<UserData> { user ->
+            user.let {
+                val image = user.getProfile()
+
+                val chatObserver = Observer<List<ChatData>> { chat ->
+                    chat.let {
+                        adapter = ChatAdapter(
+                            this@MessageActivity,
+                            chat,
+                            image
+                        )
+                        recyclerView.adapter = adapter
+                    }
+                }
+                viewModel.getMessages(firebaseUser.uid, messageReceiver, user!!.getProfile()).observe(this, chatObserver)
             }
+        }
+        viewModel.getChatUser(reference, binding).observe(this, userObserver)
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
         registerToken()
 
         binding.sendButtonChat.setOnClickListener {
@@ -216,37 +226,6 @@ class MessageActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun getMessages(senderId: String, receiverId: String, receiverImageUrl: String) {
-        chatList = ArrayList()
-        val reference = FirebaseDatabase.getInstance().reference.child("Chat")
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                (chatList as ArrayList<ChatData>).clear()
-                for (snap in snapshot.children) {
-                    val chat = snap.getValue(ChatData::class.java)
-
-                    if (chat!!.getReceiver() == senderId && chat.getSender() == receiverId
-                        || chat.getReceiver() == receiverId && chat.getSender() == senderId
-                    ) {
-
-                        // Populate arrayList with messages
-                        (chatList as ArrayList<ChatData>).add(chat)
-                    }
-                    adapter = ChatAdapter(
-                        this@MessageActivity,
-                        (chatList as ArrayList<ChatData>),
-                        receiverImageUrl
-                    )
-                    recyclerView.adapter = adapter
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        })
     }
 
     private var seenListener: ValueEventListener? = null

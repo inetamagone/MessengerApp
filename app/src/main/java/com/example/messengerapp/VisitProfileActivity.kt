@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.messengerapp.databinding.ActivityVisitProfileBinding
 import com.example.messengerapp.model.UserData
 import com.google.firebase.database.DataSnapshot

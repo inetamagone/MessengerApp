@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentChatBinding
-import com.example.messengerapp.viewModels.MessengerViewModel
+import com.example.messengerapp.viewModels.FragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -19,7 +19,7 @@ class ChatFragment : Fragment() {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MessengerViewModel
+    private lateinit var viewModel: FragmentViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
@@ -38,7 +38,7 @@ class ChatFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[MessengerViewModel::class.java]
+        viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 

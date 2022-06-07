@@ -69,4 +69,7 @@
     <string name="delete_message">Delete Message</string>
     <string name="not_deleted">Failed to delete</string>
     <string name="new_message">New message</string>
+    <string name="chat_title">Chat</string>
+    <string name="search_title">Search</string>
+    <string name="settings_title">Settings</string>
 </resources>

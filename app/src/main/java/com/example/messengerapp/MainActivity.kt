@@ -14,11 +14,11 @@ import com.example.messengerapp.fragments.ChatFragment
 import com.example.messengerapp.fragments.SearchFragment
 import com.example.messengerapp.fragments.SettingsFragment
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.utils.picassoSetImage
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         val viewPager: ViewPager = binding.viewPager
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
-        viewPagerAdapter.addFragment(ChatFragment(), "Chat")
-        viewPagerAdapter.addFragment(SearchFragment(), "Search")
-        viewPagerAdapter.addFragment(SettingsFragment(), "Settings")
+        viewPagerAdapter.addFragment(ChatFragment(), getString(R.string.chat_title))
+        viewPagerAdapter.addFragment(SearchFragment(), getString(R.string.search_title))
+        viewPagerAdapter.addFragment(SettingsFragment(), getString(R.string.settings_title))
 
         viewPager.adapter = viewPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -55,10 +55,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: UserData? = snapshot.getValue(UserData::class.java)
                 binding.userName.text = user!!.getUsername()
-                Picasso
-                    .get()
-                    .load(user.getProfile())
-                    .into(binding.profileImage)
+                picassoSetImage(user.getProfile(), binding.profileImage)
             }
 
             override fun onCancelled(error: DatabaseError) {

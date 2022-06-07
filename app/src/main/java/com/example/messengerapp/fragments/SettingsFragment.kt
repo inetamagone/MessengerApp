@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.messengerapp.databinding.FragmentSettingsBinding
-import com.example.messengerapp.viewModels.MessengerViewModel
+import com.example.messengerapp.viewModels.FragmentViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -22,7 +22,7 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MessengerViewModel
+    private lateinit var viewModel: FragmentViewModel
 
     private lateinit var userReference: DatabaseReference
     private lateinit var firebaseUser: FirebaseUser
@@ -44,7 +44,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[MessengerViewModel::class.java]
+        viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
         userReference =

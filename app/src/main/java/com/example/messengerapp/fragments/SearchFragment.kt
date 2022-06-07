@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.adapters.UserAdapter
 import com.example.messengerapp.databinding.FragmentSearchBinding
 import com.example.messengerapp.model.ChatListData
-import com.example.messengerapp.viewModels.MessengerViewModel
+import com.example.messengerapp.viewModels.FragmentViewModel
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: MessengerViewModel
+    private lateinit var viewModel: FragmentViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: UserAdapter
     private var chatList: List<ChatListData> = ArrayList()
@@ -36,7 +36,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[MessengerViewModel::class.java]
+        viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
 
         viewModel.isChatFragment = false
 
