@@ -2,11 +2,10 @@ package com.example.messengerapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import com.example.messengerapp.databinding.ActivityRegistrationBinding
+import com.example.messengerapp.utils.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -46,19 +45,13 @@ class RegistrationActivity : AppCompatActivity() {
 
         when {
             username == "" -> {
-                Toast
-                    .makeText(this, getString(R.string.enter_username), Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this, getString(R.string.enter_username))
             }
             email == "" -> {
-                Toast
-                    .makeText(this, getString(R.string.enter_email), Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this, getString(R.string.enter_email))
             }
             password == "" -> {
-                Toast
-                    .makeText(this, getString(R.string.enter_password), Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this, getString(R.string.enter_password))
             }
             else -> {
                 auth.createUserWithEmailAndPassword(email, password)
@@ -90,23 +83,17 @@ class RegistrationActivity : AppCompatActivity() {
                                         startActivity(intent)
                                         finish()
                                     } else {
-                                        Toast
-                                            .makeText(
-                                                this@RegistrationActivity,
-                                                getString(R.string.error_message) + task.exception?.message.toString(),
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
+                                        showToast(
+                                            this,
+                                            getString(R.string.error_message) + task.exception?.message.toString()
+                                        )
                                     }
                                 }
                         } else {
-                            Toast
-                                .makeText(
-                                    this,
-                                    getString(R.string.error_message) + task.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
+                            showToast(
+                                this,
+                                getString(R.string.error_message) + task.exception?.message.toString()
+                            )
                         }
                     }
             }

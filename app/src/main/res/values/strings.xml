@@ -72,4 +72,13 @@
     <string name="chat_title">Chat</string>
     <string name="search_title">Search</string>
     <string name="settings_title">Settings</string>
+    <string name="token_fail_message">Fetching FCM registration token failed</string>
+    <string name="notification_sent">sendNotification onResponse: notification sent</string>
+    <string name="notification_not_sent">Notification is NOT sent</string>
+    <string name="send_notification_error">sendNotification onResponse Error</string>
+    <string name="send_notification_failure">sendNotification onFailure</string>
+    <string name="error_notification_cancelled">sendNotification onCancelled</string>
+    <string name="token_register_success">sendRegistrationToServer onSuccess</string>
+    <string name="token_register_failure">sendRegistrationToServer onFailure</string>
+    <string name="token_register_cancelled">sendRegistrationToServer cancelled: no user logged in</string>
 </resources>

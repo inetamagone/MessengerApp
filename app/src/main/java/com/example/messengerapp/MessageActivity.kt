@@ -16,7 +16,7 @@ import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
 import com.example.messengerapp.utils.registerToken
 import com.example.messengerapp.utils.sendNotification
-import com.example.messengerapp.viewModels.ActivityViewModel
+import com.example.messengerapp.viewModels.MessageActivityViewModel
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +27,7 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 
 private lateinit var binding: ActivityMessageBinding
-private lateinit var viewModel: ActivityViewModel
+private lateinit var viewModel: MessageActivityViewModel
 
 class MessageActivity : AppCompatActivity() {
 
@@ -45,7 +45,7 @@ class MessageActivity : AppCompatActivity() {
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[ActivityViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MessageActivityViewModel::class.java]
 
         val toolbar: Toolbar = binding.toolbarChat
         setSupportActionBar(toolbar)
@@ -91,7 +91,7 @@ class MessageActivity : AppCompatActivity() {
         }
         viewModel.getChatUser(reference, binding).observe(this, userObserver)
 
-        registerToken()
+        registerToken(this)
 
         binding.sendButtonChat.setOnClickListener {
             notify = true

@@ -4,14 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import com.example.messengerapp.databinding.ActivityVisitProfileBinding
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.utils.picassoSetImage
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.squareup.picasso.Picasso
 
 private lateinit var binding: ActivityVisitProfileBinding
 
@@ -33,14 +32,10 @@ class VisitProfileActivity : AppCompatActivity() {
                 if (snapshot.exists()) {
                     user = snapshot.getValue(UserData::class.java)!!
                     binding.usernameVisit.text = user.getUsername()
-                    Picasso
-                        .get()
-                        .load(user.getProfile())
-                        .into(binding.profileImageVisit)
-                    Picasso
-                        .get()
-                        .load(user.getCover())
-                        .into(binding.coverImageVisit)
+
+                    picassoSetImage(user.getProfile(), binding.profileImageVisit)
+                    picassoSetImage(user.getCover(), binding.coverImageVisit)
+
                     binding.aboutVisit.text = user.getAbout()
 
                 }

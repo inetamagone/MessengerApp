@@ -8,7 +8,7 @@ import com.example.messengerapp.model.UserData
 import com.example.messengerapp.utils.picassoSetImage
 import com.google.firebase.database.*
 
-class ActivityViewModel: ViewModel() {
+class MessageActivityViewModel: ViewModel() {
 
     private lateinit var user: UserData
     private var userInfo = MutableLiveData<UserData>()

@@ -6,17 +6,17 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messengerapp.FullImageActivity
 import com.example.messengerapp.R
 import com.example.messengerapp.databinding.MessageItemLeftBinding
 import com.example.messengerapp.databinding.MessageItemRightBinding
 import com.example.messengerapp.model.ChatData
+import com.example.messengerapp.utils.picassoSetImage
+import com.example.messengerapp.utils.showToast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.picasso.Picasso
 
 class ChatAdapter(
     private var context: Context,
@@ -43,14 +43,14 @@ class ChatAdapter(
 
         fun bind(chatData: ChatData) {
             // Profile image displaying
-            Picasso.get().load(imageUrl).into(binding.rightImageProfile)
+            picassoSetImage(imageUrl, binding.rightImageProfile)
             // image sending
             when {
                 chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "" -> {
                     binding.apply {
                         rightMessageText.visibility = View.GONE
                         rightImageView.visibility = View.VISIBLE
-                        Picasso.get().load(chatData.getUrl()).into(binding.rightImageView)
+                        picassoSetImage(chatData.getUrl(), binding.rightImageView)
                         rightImageView.setOnClickListener {
                             val options = arrayOf<CharSequence>(
                                 context.getString(R.string.open_image),
@@ -63,7 +63,8 @@ class ChatAdapter(
                                 setItems(options) { _, choice ->
                                     when (choice) {
                                         0 -> {
-                                            val intent = Intent(context, FullImageActivity::class.java)
+                                            val intent =
+                                                Intent(context, FullImageActivity::class.java)
                                             intent.putExtra("url", chatData.getUrl())
                                             context.startActivity(intent)
                                         }
@@ -119,14 +120,14 @@ class ChatAdapter(
 
         fun bind(chatData: ChatData) {
             // Profile image displaying
-            Picasso.get().load(imageUrl).into(binding.leftImageProfile)
+            picassoSetImage(imageUrl, binding.leftImageProfile)
             // image sending
             when {
                 chatData.getMessage() == context.getString(R.string.sent_you_an_image) && chatData.getUrl() != "" -> {
                     binding.apply {
                         leftMessageText.visibility = View.GONE
                         leftImageView.visibility = View.VISIBLE
-                        Picasso.get().load(chatData.getUrl()).into(binding.leftImageView)
+                        picassoSetImage(chatData.getUrl(), binding.leftImageView)
 
                         leftImageView.setOnClickListener {
                             val options = arrayOf<CharSequence>(
@@ -214,22 +215,10 @@ class ChatAdapter(
             .addOnCompleteListener { task ->
                 when {
                     task.isSuccessful -> {
-                        Toast
-                            .makeText(
-                                context,
-                                context.getString(R.string.deleted),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        showToast(context, context.getString(R.string.deleted))
                     }
                     else -> {
-                        Toast
-                            .makeText(
-                                context,
-                                context.getString(R.string.not_deleted),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        showToast(context, context.getString(R.string.not_deleted))
                     }
                 }
             }

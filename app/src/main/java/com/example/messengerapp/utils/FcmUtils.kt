@@ -21,85 +21,85 @@ import retrofit2.Response
 
 private const val TAG = "FcmUtils"
 
-
-fun registerToken() {
+fun registerToken(context: Context) {
     FirebaseMessaging.getInstance().token.addOnCompleteListener { task: Task<String> ->
         if (task.isSuccessful) {
             val token = task.result
-            sendRegistrationToServer(token)
-            Log.w(TAG, "sendRegistrationToServer(token) CALLED")
+            sendRegistrationToServer(context, token)
         } else {
-            Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+            Log.w(TAG, context.getString(R.string.token_fail_message), task.exception)
         }
     }
 }
 
 fun sendNotification(context: Context, senderId: String, body: String, receiverId: String) {
-    Log.d(TAG, "sendNotification called")
     val reference = FirebaseDatabase.getInstance().getReference("Tokens")
     // Get recipient token based on user id
     val query = reference.orderByKey().equalTo(receiverId)
     query.addValueEventListener(object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            Log.d(
-                TAG,
-                "sendNotification onDataChange: success get recipient token (${dataSnapshot.children})"
-            )
 
             dataSnapshot.children.forEach { snapshot ->
                 val token = snapshot.getValue(NotificationToken::class.java)
                 val notificationTitle = context.getString(R.string.new_message)
-                val notification = Notification(senderId,
+                val notification = Notification(
+                    senderId,
                     notificationTitle,
                     body,
                     "high",
                     "TO_MESSAGES"
                 )
                 val message = Message(notification, token?.getToken().orEmpty())
-                Log.d(TAG, "TOKEN: ${token?.getToken().orEmpty()}")
                 val client = ApiConfig.getApiService(context).sendNotification(message)
-                Log.d(TAG, "message: $message")
+
                 client?.enqueue(object : Callback<FcmResponse?> {
                     override fun onResponse(
                         call: Call<FcmResponse?>,
                         response: Response<FcmResponse?>,
                     ) {
-                        if (response.code() == 200 && response.body() != null) {
-                            Log.d(TAG, "Response.body(): ${response.body().toString()}")
+                        when {
+                            response.code() == 200 && response.body() != null -> {
 
-                            if (response.body()!!.success == 1) {
-                                Log.d(TAG, "sendNotification onResponse: notification sent")
+                                when (response.body()!!.success) {
+                                    1 -> {
+                                        Log.d(TAG, context.getString(R.string.notification_sent))
 
-                            } else {
-                                Log.d(
-                                    TAG,
-                                    "Success code: ${response.body()!!.success}, notification NOT sent"
+                                    }
+                                    else -> {
+                                        Log.d(
+                                            TAG,
+                                            context.getString(R.string.notification_not_sent)
+                                        )
+                                    }
+                                }
+                            }
+                            else -> {
+                                Log.e(
+                                    TAG, context.getString(R.string.send_notification_error)
                                 )
                             }
-                        } else {
-                            Log.e(
-                                TAG, "sendNotification onResponse: error code ${response.code()}"
-                            )
                         }
                     }
 
                     override fun onFailure(call: Call<FcmResponse?>, t: Throwable) {
-                        Log.e(TAG, "sendNotification onFailure", t)
+                        Log.e(TAG, context.getString(R.string.send_notification_failure), t)
                     }
                 })
             }
         }
 
         override fun onCancelled(error: DatabaseError) {
-            Log.e(TAG, "sendNotification onCancelled", error.toException())
+            Log.e(
+                TAG,
+                context.getString(R.string.error_notification_cancelled),
+                error.toException()
+            )
         }
     })
 }
 
 // Store latest token to database server
-fun sendRegistrationToServer(newToken: String) {
-    Log.d(TAG, "sendRegistrationToServer called: $newToken")
-    // This token is required as a notification receiver
+fun sendRegistrationToServer(context: Context, newToken: String) {
     val firebaseUser = FirebaseAuth.getInstance().currentUser
     if (firebaseUser != null) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("Tokens")
@@ -107,10 +107,10 @@ fun sendRegistrationToServer(newToken: String) {
         databaseReference.child(firebaseUser.uid)
             .setValue(token)
             .addOnSuccessListener {
-                Log.d(TAG, "sendRegistrationToServer onSuccess")
+                Log.d(TAG, context.getString(R.string.token_register_success))
             }
             .addOnFailureListener {
-                Log.e(TAG, "sendRegistrationToServer onFailure", it)
+                Log.e(TAG, context.getString(R.string.token_register_failure), it)
             }
-    } else Log.w(TAG, "sendRegistrationToServer cancelled: no user logged in")
+    } else Log.w(TAG, context.getString(R.string.token_register_cancelled))
 }

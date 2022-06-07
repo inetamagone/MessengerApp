@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -18,16 +17,13 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.*
 
-private const val TAG = "PushNotificationService"
-
 // Class that runs in the background, detecting when a new notification is received
 
 class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        registerToken()
-        Log.d(TAG, "onNewToken called")
+        registerToken(this)
     }
 
     /* Two different cases when onNewToken is called:
@@ -37,7 +33,6 @@ class PushNotificationService : FirebaseMessagingService() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        Log.d(TAG, "onMessageReceived called")
         if (message.data.isNotEmpty()) {
             pushNotification(message)
         }
@@ -45,7 +40,6 @@ class PushNotificationService : FirebaseMessagingService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun pushNotification(message: RemoteMessage) {
-        Log.d(TAG, "pushNotification called")
 
         val channelId = "com.example.messengerapp.notifications"
         val channelName = "Message Notification"
