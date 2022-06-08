@@ -7,7 +7,7 @@
     <dimen name="text_30">30sp</dimen>
     <dimen name="space_180">180dp</dimen>
     <dimen name="space_10">10dp</dimen>
-    <dimen name="space_18">18sp</dimen>
+    <dimen name="space_18">18dp</dimen>
     <dimen name="text_18">18sp</dimen>
     <dimen name="space_30">30dp</dimen>
     <dimen name="space_6">6dp</dimen>
@@ -16,4 +16,9 @@
     <dimen name="space_295">295dp</dimen>
     <dimen name="space_100">100dp</dimen>
     <dimen name="space_80">80dp</dimen>
+    <dimen name="space_90">90dp</dimen>
+    <dimen name="space_130">130dp</dimen>
+    <dimen name="space_350">350dp</dimen>
+    <dimen name="space_11">11dp</dimen>
+    <dimen name="space_50">50dp</dimen>
 </resources>

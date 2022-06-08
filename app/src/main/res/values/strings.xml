@@ -81,4 +81,5 @@
     <string name="token_register_success">sendRegistrationToServer onSuccess</string>
     <string name="token_register_failure">sendRegistrationToServer onFailure</string>
     <string name="token_register_cancelled">sendRegistrationToServer cancelled: no user logged in</string>
+    <string name="send_button_visit">Send a Message</string>
 </resources>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    android:paddingStart="@dimen/space_40"
+    android:paddingEnd="@dimen/space_40"
+    tools:context=".VisitProfileActivity">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/visit_image_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="@dimen/space_20"
+        android:layout_marginTop="@dimen/space_10"
+        android:layout_marginBottom="@dimen/space_6"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/cover_image_visit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/space_150"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cover_placeholder" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_visit"
+                android:layout_width="@dimen/space_150"
+                android:layout_height="@dimen/space_150"
+                android:layout_marginStart="@dimen/space_60"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="@dimen/space_50"
+                android:src="@drawable/image_placeholder" />
+
+            <TextView
+                android:id="@+id/username_visit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_image_visit"
+                android:layout_marginStart="@dimen/space_100"
+                android:layout_marginTop="@dimen/space_10"
+                android:layout_marginBottom="@dimen/space_10"
+                android:text="@string/visit_username"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_18" />
+        </RelativeLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/visit_info_card"
+            android:layout_width="@dimen/space_350"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/space_20"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="@dimen/space_100"
+            android:layout_marginEnd="@dimen/space_20"
+            android:layout_marginTop="@dimen/space_10"
+            android:background="@color/light_grey">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_10">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_visit"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_18" />
+
+                <TextView
+                    android:id="@+id/about_visit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_10"
+                    android:text="@string/about_text_settings"
+                    android:textSize="@dimen/text_18" />
+
+                <ImageView
+                    android:id="@+id/facebook_visit"
+                    android:layout_width="@dimen/space_60"
+                    android:layout_height="@dimen/space_60"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:src="@drawable/fb_icon"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/visit_send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_20"
+            android:background="@color/purple_700"
+            android:text="@string/send_button_visit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/space_16"
+            android:layout_marginStart="@dimen/space_100"
+            android:layout_marginEnd="@dimen/space_100"
+            android:layout_marginBottom="@dimen/space_10"
+            android:layout_gravity="bottom" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
