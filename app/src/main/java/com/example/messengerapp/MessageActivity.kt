@@ -14,6 +14,7 @@ import com.example.messengerapp.adapters.ChatAdapter
 import com.example.messengerapp.databinding.ActivityMessageBinding
 import com.example.messengerapp.model.ChatData
 import com.example.messengerapp.model.UserData
+import com.example.messengerapp.utils.REQUEST_CODE
 import com.example.messengerapp.utils.registerToken
 import com.example.messengerapp.utils.sendNotification
 import com.example.messengerapp.viewModels.MessageActivityViewModel
@@ -187,7 +188,7 @@ class MessageActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.data != null) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null && data.data != null) {
 
             val progressDialog = ProgressDialog(this)
             progressDialog.setMessage(getString(R.string.sending_image))

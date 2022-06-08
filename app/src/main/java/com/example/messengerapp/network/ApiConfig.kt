@@ -5,10 +5,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.example.messengerapp.utils.BASE_URL
 
 object ApiConfig {
-
-    private var BASE_URL = "https://fcm.googleapis.com"
 
     fun getApiService(context: Context): ApiService {
         val loggingInterceptor = ChuckerInterceptor.Builder(context)
